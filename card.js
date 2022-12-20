@@ -4,9 +4,10 @@ export default class Card {
   constructor(selector) {
     this.parent = selector;
     this.card = null;
-    this.cardToFind = null;
+    this.cardObj = null;
     this.image = null;
     this.back = null;
+    this.canResetState = false;
 
     this.init();
   }
@@ -48,41 +49,50 @@ export default class Card {
   showCard() {
     if (!this.canShowCard()) return;
     state.userShouldWait = true;
-    this.saveCardToFind();
-    this.handleFlipCard();
+    this.saveCardObj();
     this.addCard();
+    this.handleFlipCard();
     this.checkCards();
   }
 
-  handleFlipCard() {
-    this.card.classList.toggle('is-flipped');
-    setTimeout(() => {
-      this.card.classList.toggle('is-flipped');
-      state.userShouldWait = false;
-    }, state.time);
+  async handleFlipCard() {
+    this.card.classList.add('is-flipped');
+    this.canResetState = false;
+    state.userShouldWait = false;
+
+    if (state.openCards.length > 1) {
+      setTimeout(() => {
+        state.openCards.forEach(({card}) => {
+          card.classList.remove('is-flipped')
+        })
+        state.userShouldWait = false;
+        this.canResetState = true;
+        this.checkCards();
+      }, state.time);
+      return;
+    }
   }
 
-  saveCardToFind() {
+  saveCardObj() {
     const attr = this.card.getAttribute('pos');
-    this.cardToFind = state.allCards.find((c) => +attr === c.pos);
-  }
-
-  canShowCard() {
-    return !(
-      this.someCardIsFlipped() ||
-      state.userShouldWait ||
-      state.targetPairs.includes(this.cardToFind)
-    );
-  }
-
-  someCardIsFlipped() {
-    return [...this.parent.children].some((cardEl) =>
-      cardEl.classList.contains('is-flipped')
-    );
+    this.cardObj = state.allCards.find((c) => +attr === c.pos);
   }
 
   addCard() {
-    state.targetPairs.push(this.cardToFind);
+    state.openCards.push(this.cardObj);
+  }
+
+  canShowCard() {
+    return (
+      !state.userShouldWait &&
+      state.openCards.length < 2 &&
+      !this.isSameCard() &&
+      !this.card.classList.contains('hidden')
+    );
+  }
+
+  isSameCard() {
+    return state.openCards[0]?.pos === +this.card.getAttribute('pos');
   }
 
   checkCards() {
@@ -91,33 +101,39 @@ export default class Card {
       this.removeCards();
       return;
     }
-    this.#clearTargets();
+    if (this.canResetState) {
+      this.#clearState();
+      return;
+    }
   }
 
   canCheckCards() {
-    const { targetPairs: tp } = state;
-    return !(tp.length < 2 && tp.includes(this.cardToFind));
+    const { openCards: tp } = state;
+    return !(tp.length !== 2 && tp.includes(this.cardObj));
   }
 
   canRemoveCards() {
-    const { targetPairs: tp } = state;
+    if (!this.canResetState) return;
+    const { openCards: tp } = state;
     const [first, second] = tp;
     return first.id === second.id && first.pos !== second.pos;
   }
 
   removeCards() {
     setTimeout(() => {
-      state.targetPairs.forEach(({ card }) => {
-        card.classList.add('hidden');
+      state.openCards.forEach(({ card }) => {
+        card.classList.add('is-flipped', 'card-hidden')
+        card.firstElementChild.classList.add('hidden');
       });
       state.points++;
-      this.#clearTargets();
-    }, state.time);
+      this.#clearState();
+    }, 0);
   }
 
-  #clearTargets() {
-    state.targetPairs.length = 0;
+  #clearState() {
+    state.openCards.length = 0;
     state.userShouldWait = false;
+    this.canResetState = true;
   }
 
   handleEvents() {
