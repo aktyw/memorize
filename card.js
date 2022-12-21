@@ -2,14 +2,14 @@ import { state } from './state.js';
 import { game } from './index.js';
 
 export default class Card {
+  parent;
+  card;
+  cardObj;
+  image;
+  back;
+  canResetState = false;
   constructor(selector) {
     this.parent = selector;
-    this.card = null;
-    this.cardObj = null;
-    this.image = null;
-    this.back = null;
-    this.canResetState = false;
-
     this.init();
   }
 
@@ -56,9 +56,10 @@ export default class Card {
   }
 
   handleFlipCard() {
-    this.card.classList.add('is-flipped');
     this.canResetState = false;
     state.userShouldWait = false;
+    this.card.classList.add('is-flipped');
+
     if (state.openCards.length > 1) {
       setTimeout(() => {
         state.openCards.forEach(({ card }) => {
@@ -144,9 +145,5 @@ export default class Card {
 
   handleEvents() {
     this.card.addEventListener('click', this.showCard.bind(this));
-  }
-
-  clearCards(){
-    console.log('clear cards!');
   }
 }

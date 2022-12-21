@@ -1,27 +1,24 @@
 import { opacityTime } from './helper.js';
 import { game } from './index.js';
-import Card from './card.js';
 
 class GameState {
   points = 0;
   level = 1;
-  maxLevel = 3;
+  maxLevel = 5;
   levelsOpts = {
     time: [10, 16, 24, 32, 40],
-    pointsMulti: [1, 1.1, 1.25, 1.5, 2],
+    pointsMulti: [1, 2, 3, 4, 5],
     cards: [4, 8, 12, 16, 20],
   };
   time = this.levelsOpts.time[this.level - 1];
   cardAmount = this.levelsOpts.cards[this.level - 1];
-
   allCards = [];
   removedCards = 0;
   openCards = [];
   isGameOver = false;
-
   timeToFlip = 1000;
   second = 1000;
-  countdown = null;
+  countdown;
   timeOpacity = opacityTime / 2;
   userShouldWait = false;
 
@@ -33,10 +30,6 @@ class GameState {
     this.points += amount * this.levelsOpts.pointsMulti[this.level - 1];
   }
 
-  get levelInfo() {
-    return this.level;
-  }
-
   get isGameOver() {
     return this.isGameOver;
   }
@@ -46,7 +39,7 @@ class GameState {
     this.removedCards += amount;
   }
 
-  timer = () => {
+  startCountdown = () => {
     this.countdown = setInterval(() => {
       if (this.time > 0 && !this.isRemovedAll()) {
         this.time--;
@@ -61,37 +54,39 @@ class GameState {
     return this.allCards.length === this.removedCards;
   }
 
-  checkGameStatus = () => {
+  checkGameStatus() {
     clearInterval(this.countdown);
     this.isGameOver = true;
     this.isRemovedAll() ? this.handleLevelWin() : this.handleGameLost();
-  };
+  }
 
   handleLevelWin() {
     if (this.level === this.maxLevel) {
       this.handleGameWon();
       return;
     }
+    this.showMessage(`You go to the Level ${this.level + 1}`);
     this.level++;
     this.points += this.time;
-    this.time = this.levelsOpts.time[this.level - 1];
-
+    this.clearStats();
     game.clearLevel();
   }
 
   handleGameLost() {
     this.showMessage('You Lost');
     this.level = 1;
-    this.time = this.levelsOpts.pointsMulti[this.level - 1];
+    this.clearStats();
+    game.clearLevel();
+  }
+
+  clearStats() {
+    this.time = this.levelsOpts.time[this.level - 1];
+    this.cardAmount = this.levelsOpts.cards[this.level - 1];
     this.allCards.length = 0;
     this.removedCards = 0;
     this.openCards.length = 0;
     this.isGameOver = false;
     this.userShouldWait = false;
-
-    game.clearLevel();
-    console.log(card);
-    Card.clearCards();
   }
 
   handleGameWon() {
@@ -99,7 +94,6 @@ class GameState {
   }
 
   showMessage(msg) {
-    //temporary console.log
     console.log(msg);
   }
 }

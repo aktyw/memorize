@@ -3,12 +3,11 @@ import { state } from './state.js';
 import Card from './card.js';
 
 export default class GameStructure {
+  parent = document.body;
+  gameContainer;
+  ui;
+  startBtn;
   constructor() {
-    this.parent = document.body;
-    this.gameContainer = null;
-    this.ui = null;
-    this.startBtn = null;
-
     this.init();
   }
 
@@ -100,15 +99,20 @@ export default class GameStructure {
   }
 
   handleEvents() {
-    this.startBtn.addEventListener('click', state.timer, { once: true });
+    this.startBtn.addEventListener('click', state.startCountdown, {
+      once: true,
+    });
   }
 
-  clearLevel() {
+  resetDOM() {
     this.parent.innerHTML = '';
     this.gameContainer = null;
     this.ui = null;
     this.startBtn = null;
-    console.log(Card);
+  }
+
+  clearLevel() {
+    this.resetDOM();
     this.init();
   }
 }
