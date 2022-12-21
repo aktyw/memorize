@@ -6,10 +6,6 @@ export default class GameStructure {
   parent = document.body;
   gameContainer;
   ui;
-  startBtn;
-  constructor() {
-    this.init();
-  }
 
   init() {
     this.#generateUI();
@@ -18,8 +14,6 @@ export default class GameStructure {
     this.#shuffleCards(state.allCards);
     this.#renderCards();
     this.showUI();
-    this.renderBtn();
-    this.handleEvents();
   }
 
   #generateContainer() {
@@ -87,21 +81,9 @@ export default class GameStructure {
     levelEl.textContent = `level: ${state.level}`;
   }
 
-  renderBtn() {
-    this.renderStartBtn();
-  }
-
-  renderStartBtn() {
-    this.startBtn = document.createElement('button');
-    this.startBtn.classList.add('btn', 'start-btn');
-    this.startBtn.textContent = 'Start';
-    this.ui.appendChild(this.startBtn);
-  }
-
-  handleEvents() {
-    this.startBtn.addEventListener('click', state.startCountdown, {
-      once: true,
-    });
+  startGame() {
+    state.isGameStart = true;
+    state.startCountdown();
   }
 
   resetDOM() {

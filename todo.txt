@@ -1,7 +1,9 @@
 
 MENU simple menu screen - start, high score(locale storage), game over screen, restart possibility
 
-styling - Grid, responsive mobile, stats styling, change font
+grid bigger on desktop
+time red when 0 (blinking last 3 sec ?)
+
 gsap animations
 refactor
 

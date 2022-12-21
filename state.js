@@ -16,6 +16,7 @@ class GameState {
   removedCards = 0;
   openCards = [];
   isGameOver = false;
+  isGameStart = false;
   timeToFlip = 1000;
   second = 1000;
   countdown;
@@ -90,6 +91,7 @@ class GameState {
     this.removedCards = 0;
     this.openCards.length = 0;
     this.isGameOver = false;
+    this.isGameStart = false;
     this.userShouldWait = false;
   }
 
