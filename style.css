@@ -6,38 +6,40 @@
 }
 
 body {
-  width: 100vw;
-  font-family: 'Oxanium';
-  background-color: hsl(0, 60%, 8%);
   display: grid;
-  place-items: center;
+  justify-content: center;
+  align-items: flex-start;
+  grid-template-rows: 200px 1fr;
+  width: 100vw;
+  height: 100vh;
+  font-family: 'Oxanium';
+  background: url('./assets/dark-room-2.jpg');
+  background-size: cover;
+  background-position: center;
 }
 
 .memory {
-  display: flex;
-  flex-flow: row wrap;
-  align-content: center;
+  display: grid;
+  justify-items: center;
   justify-content: center;
-  gap: 40px;
+  max-width: 1440px;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 20px;
+  padding: 40px 0;
   perspective: 2500px;
 }
 
 .card {
   position: relative;
-  display: flex;
-  flex-direction: column;
   width: 200px;
-  height: 300px;
-  border-radius: 5px;
+  height: 280px;
+  border-radius: 12px;
   cursor: pointer;
   transition: transform 0.5s;
   transform-style: preserve-3d;
-  box-shadow: 0px 0px 27.5px -30px rgba(94, 2, 2, 0.151),
-    0px 0px 46.8px -30px rgba(94, 2, 2, 0.228),
-    0px 0px 66.2px -30px rgba(94, 2, 2, 0.267),
-    0px 0px 95.1px -30px rgba(94, 2, 2, 0.296),
-    0px 0px 177px -30px rgba(94, 2, 2, 0.4);
-  box-shadow: 0px 0px 45px 0px rgba(94, 2, 2, 0.5);
+  -webkit-box-shadow: 0px 0px 45px 0px rgba(46, 164, 255, 0.3);
+  -moz-box-shadow: 0px 0px 45px 0px rgba(46, 164, 255, 0.3);
+  box-shadow: 0px 0px 45px 0px rgba(46, 164, 255, 0.3);
 }
 
 .card__image {
@@ -56,10 +58,12 @@ body {
 }
 
 .card-back {
-  background: url('/assets/simone-secci-49uySSA678U-unsplash.jpg');
+  background: url('/assets/card.jpg');
   background-size: cover;
   background-position: center;
-  opacity: inherit;
+  background-repeat: no-repeat;
+  border: 2px solid rgb(18, 90, 123);
+  transition: filter 0.3s;
 }
 
 .card-back:hover {
@@ -90,7 +94,6 @@ body {
   flex-direction: column;
   padding: 20px;
   width: 100%;
-  margin-bottom: 50px;
 }
 
 .stats {
@@ -123,4 +126,29 @@ body {
 
 .btn:hover {
   background-color: rgb(190, 174, 174);
+}
+
+@media all and (max-width: 1100px) {
+  .card {
+    width: 150px;
+    height: 210px;
+  }
+}
+
+@media all and (max-width: 768px) {
+  body {
+    grid-template-rows: 160px 1fr;
+  }
+  .memory {
+    gap: 10px;
+    padding: 10px 0;
+  }
+  .card {
+    width: 75px;
+    height: 95px;
+  }
+
+  .ui {
+    padding: 10px 0;
+  }
 }

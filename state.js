@@ -74,10 +74,14 @@ class GameState {
 
   handleGameLost() {
     this.showMessage('You Lost');
+    this.saveHighScore();
     this.level = 1;
+    this.points = 0;
     this.clearStats();
     game.clearLevel();
   }
+
+  saveHighScore() {}
 
   clearStats() {
     this.time = this.levelsOpts.time[this.level - 1];
