@@ -2,12 +2,12 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: inherit;
 }
 
 body {
-  height: 100vh;
   width: 100vw;
-  font-family: 'Nunito Sans';
+  font-family: 'Oxanium';
   background-color: hsl(0, 60%, 8%);
   display: grid;
   place-items: center;
@@ -19,6 +19,7 @@ body {
   align-content: center;
   justify-content: center;
   gap: 40px;
+  perspective: 2500px;
 }
 
 .card {
@@ -84,20 +85,42 @@ body {
   z-index: -1;
 }
 
+.ui {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  width: 100%;
+  margin-bottom: 50px;
+}
+
 .stats {
-  position: absolute;
   display: flex;
   flex-direction: column;
   width: 250px;
-  height: 50px;
   top: 0;
   left: 0;
-  padding: 20px;
 }
 
-.stats__lives,
-.stats__points {
-  display: inline-block;
+.stats__time,
+.stats__points,
+.stats__level {
   color: rgb(224, 224, 224);
   font-size: 30px;
+}
+
+.btn {
+  font-weight: 400;
+  text-transform: lowercase;
+  font-size: 30px;
+  border-radius: 5px;
+  border: none;
+  width: 130px;
+  height: 35px;
+  background-color: rgb(255, 255, 255);
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: rgb(190, 174, 174);
 }

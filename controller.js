@@ -1,3 +1,0 @@
-/* 
-TODO Grid Cards Styles
- TODO add score state */

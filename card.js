@@ -1,4 +1,5 @@
-import { gameState as state } from './state.js';
+import { state } from './state.js';
+import { game } from './index.js';
 
 export default class Card {
   constructor(selector) {
@@ -36,7 +37,6 @@ export default class Card {
       `https://source.unsplash.com/random/${Math.random() * 10000}`
     );
     this.image.setAttribute('draggable', `false`);
-    this.image.setAttribute('draggable', `false`);
     this.card.appendChild(this.image);
   }
 
@@ -55,20 +55,19 @@ export default class Card {
     this.checkCards();
   }
 
-  async handleFlipCard() {
+  handleFlipCard() {
     this.card.classList.add('is-flipped');
     this.canResetState = false;
     state.userShouldWait = false;
-
     if (state.openCards.length > 1) {
       setTimeout(() => {
-        state.openCards.forEach(({card}) => {
-          card.classList.remove('is-flipped')
-        })
+        state.openCards.forEach(({ card }) => {
+          card.classList.remove('is-flipped');
+        });
         state.userShouldWait = false;
         this.canResetState = true;
         this.checkCards();
-      }, state.time);
+      }, state.timeToFlip);
       return;
     }
   }
@@ -122,12 +121,19 @@ export default class Card {
   removeCards() {
     setTimeout(() => {
       state.openCards.forEach(({ card }) => {
-        card.classList.add('is-flipped', 'card-hidden')
+        card.classList.add('is-flipped', 'card-hidden');
         card.firstElementChild.classList.add('hidden');
       });
-      state.points++;
+
+      this.changeStats();
       this.#clearState();
     }, 0);
+  }
+
+  changeStats() {
+    state.addPoints = state.level;
+    state.addRemovedCards = 2;
+    game.showUI();
   }
 
   #clearState() {
@@ -138,5 +144,9 @@ export default class Card {
 
   handleEvents() {
     this.card.addEventListener('click', this.showCard.bind(this));
+  }
+
+  clearCards(){
+    console.log('clear cards!');
   }
 }

@@ -1,26 +1,26 @@
-import { CARD_NUMBER } from './config.js';
-import Card from './card.js';
 import { getRandomNumber } from './helper.js';
-import { gameState as state } from './state.js';
+import { state } from './state.js';
+import Card from './card.js';
 
-class Game {
+export default class GameStructure {
   constructor() {
-    this.gameContainer = null;
     this.parent = document.body;
-
-    this.points = null;
-    this.lives = null;
+    this.gameContainer = null;
+    this.ui = null;
+    this.startBtn = null;
 
     this.init();
   }
 
   init() {
+    this.#generateUI();
     this.#generateContainer();
-    this.#getCards();
+    this.#makeCards(state.cardAmount);
     this.#shuffleCards(state.allCards);
     this.#renderCards();
-    this.#generateStatsEl();
-    this.showStats();
+    this.showUI();
+    this.renderBtn();
+    this.handleEvents();
   }
 
   #generateContainer() {
@@ -29,21 +29,8 @@ class Game {
     this.parent.appendChild(this.gameContainer);
   }
 
-  #generateStatsEl() {
-    const statsCnt = document.createElement('div');
-    const points = document.createElement('span');
-    const lives = document.createElement('span');
-
-    statsCnt.classList.add('stats');
-    points.classList.add('stats__points');
-    lives.classList.add('stats__lives');
-
-    this.parent.appendChild(statsCnt);
-    statsCnt.append(points, lives);
-  }
-
-  #getCards() {
-    for (let i = 0; i < CARD_NUMBER / 2; i++) {
+  #makeCards(amount) {
+    for (let i = 0; i < amount / 2; i++) {
       const card = new Card(this.gameContainer);
       const card2 = new Card(this.gameContainer);
       const id = getRandomNumber(100000, 999999);
@@ -72,15 +59,56 @@ class Game {
     });
   }
 
-  showStats() {
-    const { points, lives } = state;
-    this.points = points;
-    this.lives = lives;
+  #generateUI() {
+    this.ui = document.createElement('header');
+    this.ui.classList.add('ui');
+    this.parent.appendChild(this.ui);
+
+    const statsCnt = document.createElement('div');
+    const points = document.createElement('span');
+    const time = document.createElement('span');
+    const level = document.createElement('span');
+
+    statsCnt.classList.add('stats');
+    points.classList.add('stats__points');
+    time.classList.add('stats__time');
+    level.classList.add('stats__level');
+
+    this.ui.appendChild(statsCnt);
+    statsCnt.append(points, time, level);
+  }
+
+  showUI() {
     const pointsEl = document.querySelector('.stats__points');
-    const livesEl = document.querySelector('.stats__lives');
-    pointsEl.textContent = `Points: ${this.points}`;
-    livesEl.textContent = `Lives: ${this.lives}`;
+    const timeEl = document.querySelector('.stats__time');
+    const levelEl = document.querySelector('.stats__level');
+
+    pointsEl.textContent = `points: ${state.points}`;
+    timeEl.textContent = `time: ${state.time}`;
+    levelEl.textContent = `level: ${state.level}`;
+  }
+
+  renderBtn() {
+    this.renderStartBtn();
+  }
+
+  renderStartBtn() {
+    this.startBtn = document.createElement('button');
+    this.startBtn.classList.add('btn', 'start-btn');
+    this.startBtn.textContent = 'Start';
+    this.ui.appendChild(this.startBtn);
+  }
+
+  handleEvents() {
+    this.startBtn.addEventListener('click', state.timer, { once: true });
+  }
+
+  clearLevel() {
+    this.parent.innerHTML = '';
+    this.gameContainer = null;
+    this.ui = null;
+    this.startBtn = null;
+    console.log(Card);
+    this.init();
   }
 }
-
-const game = new Game();
