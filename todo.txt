@@ -1,10 +1,29 @@
+git squash feat/gamelevels
 
-MENU simple menu screen - start, high score(locale storage), game over screen, restart possibility
+options
+toggle difficulty EASY and NORMAL
+sound on off
+
+
+high score(locale storage) and allow to input username
+async background download
+async card images load - and local hosted images, store 20 imgs
+
+
+add timer sound when time is running out
+add sounds effect - flipping cards, music retro wave, next level, game win, 
 
 grid bigger on desktop
+grid center on mobile and little bit bigger 
+level title smaller on mobile
+bigger and center ui on mobile
 time red when 0 (blinking last 3 sec ?)
-
+add some dynamic lights on main menu or move image slightly
+refactor style to scss 
 gsap animations
+
+accesibility
+
 refactor
 
 

@@ -1,11 +1,16 @@
 import { getRandomNumber } from './helper.js';
 import { state } from './state.js';
 import Card from './card.js';
+import { game, menu } from './index.js';
 
 export default class GameStructure {
   parent = document.body;
   gameContainer;
   ui;
+  levelTitle;
+  summary;
+  playAgainBtn;
+  mainMenuBtn;
 
   init() {
     this.#generateUI();
@@ -14,6 +19,8 @@ export default class GameStructure {
     this.#shuffleCards(state.allCards);
     this.#renderCards();
     this.showUI();
+    this.renderLevelTitle();
+    this.showLevel();
   }
 
   #generateContainer() {
@@ -81,20 +88,85 @@ export default class GameStructure {
     levelEl.textContent = `level: ${state.level}`;
   }
 
+  renderLevelTitle() {
+    const level = state.level;
+    this.levelTitle = document.createElement('h2');
+    this.levelTitle.classList.add('level-title');
+    this.levelTitle.textContent = `Level ${level}`;
+    this.parent.appendChild(this.levelTitle);
+  }
+
+  showLevel() {
+    this.levelTitle.classList.add('is-visible');
+    setTimeout(() => {
+      this.levelTitle.classList.remove('is-visible');
+      state.isGameStart = true;
+    }, state.timeToStart);
+  }
+
+  renderSummary(gameStatus) {
+    const markup = `
+        <div class="summary">
+          <div class="summary__info-container">
+            <span class="summary__info">${
+              gameStatus
+                ? `Congratulations! You have won the game.<br>Gathered <span class="summary__info-color">${
+                    state.points
+                  }</span> ${state.points === 1 ? 'point' : 'points'}`
+                : `You have lost the game.<br>Gathered <span class="summary__info-color">${
+                    state.points
+                  }</span> ${state.points === 1 ? 'point' : 'points'}`
+            }</span>
+          </div>
+          <div class="summary__btn-container">
+            <button class="btn summary__btn summary__btn-again">Play Again</button>
+            <button class="btn summary__btn summary__btn-menu">Main Menu</button>
+          </div>
+        </div>
+    `;
+
+    this.parent.insertAdjacentHTML('beforeend', markup);
+
+    this.playAgainBtn = this.parent.querySelector('.summary__btn-again');
+    this.mainMenuBtn = this.parent.querySelector('.summary__btn-menu');
+    this.handleListeners();
+  }
+
+  handleListeners() {
+    this.playAgainBtn.addEventListener('click', this.playAgain.bind(this));
+    this.mainMenuBtn.addEventListener('click', () => {
+      menu.init();
+    });
+  }
+
+  playAgain() {
+    this.startGame();
+  }
+
+  showSummary() {
+    this.renderSummary(state.isGameWon);
+  }
+
   startGame() {
-    state.isGameStart = true;
-    state.startCountdown();
+    this.clearLevel();
+    this.prepStartGame();
+  }
+
+  clearLevel() {
+    this.resetDOM();
+    this.init();
   }
 
   resetDOM() {
     this.parent.innerHTML = '';
     this.gameContainer = null;
     this.ui = null;
-    this.startBtn = null;
+    this.parent.style.backgroundImage = `url(${state.background})`;
   }
 
-  clearLevel() {
-    this.resetDOM();
-    this.init();
+  prepStartGame() {
+    setTimeout(() => {
+      state.startCountdown();
+    }, state.timeToStart);
   }
 }

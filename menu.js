@@ -33,8 +33,8 @@ export default class Menu {
 
   renderBtns() {
     const btnContainer = document.createElement('div');
-    btnContainer.classList.add('btn-container')
-    this.menu.appendChild(btnContainer)
+    btnContainer.classList.add('btn-container');
+    this.menu.appendChild(btnContainer);
 
     this.startBtn = document.createElement('button');
     this.startBtn.classList.add('btn', 'start-btn');
@@ -48,8 +48,7 @@ export default class Menu {
   }
 
   startGame() {
-    this.menu.remove()
-    game.init();
+    this.menu.remove();
     game.startGame();
   }
 
@@ -58,5 +57,4 @@ export default class Menu {
       once: true,
     });
   }
-
 }

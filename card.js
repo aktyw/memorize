@@ -65,9 +65,9 @@ export default class Card {
         state.openCards.forEach(({ card }) => {
           card.classList.remove('is-flipped');
         });
-        state.userShouldWait = false;
         this.canResetState = true;
         this.checkCards();
+        state.userShouldWait = false;
       }, state.timeToFlip);
       return;
     }
@@ -87,7 +87,9 @@ export default class Card {
       !state.userShouldWait &&
       state.openCards.length < 2 &&
       !this.isSameCard() &&
-      !this.card.classList.contains('hidden')
+      !this.card.classList.contains('hidden') &&
+      state.isGameStart &&
+      state.time !== 0
     );
   }
 
@@ -108,15 +110,16 @@ export default class Card {
   }
 
   canCheckCards() {
-    const { openCards: tp } = state;
-    return !(tp.length !== 2 && tp.includes(this.cardObj));
+    const { openCards: oc } = state;
+    return !(oc.length !== 2 && oc.includes(this.cardObj));
   }
 
   canRemoveCards() {
     if (!this.canResetState) return;
-    const { openCards: tp } = state;
-    const [first, second] = tp;
-    return first.id === second.id && first.pos !== second.pos;
+    const {
+      openCards: [first, second],
+    } = state;
+    return first?.id === second?.id && first?.pos !== second?.pos;
   }
 
   removeCards() {
