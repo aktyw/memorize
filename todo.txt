@@ -6,7 +6,6 @@ sound on off
 
 
 high score(locale storage) and allow to input username
-async background download
 async card images load - and local hosted images, store 20 imgs
 
 

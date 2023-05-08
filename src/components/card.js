@@ -29,12 +29,18 @@ export default class Card {
     this.card.classList.add('card');
   }
 
-  renderImage() {
-    this.image = document.createElement('img');
-    this.image.classList.add('card__image');
-    this.image.setAttribute('src', `https://source.unsplash.com/random/${Math.random() * 10000}`);
-    this.image.setAttribute('draggable', `false`);
-    this.card.appendChild(this.image);
+  async renderImage() {
+    try {
+      this.image = document.createElement('img');
+      this.image.classList.add('card__image');
+      const url = `https://unsplash.it/640/480?${Math.random() * 1000000}`;
+      await this.image.setAttribute('src', url);
+
+      this.image.setAttribute('draggable', `false`);
+      this.card.appendChild(this.image);
+    } catch (error) {
+      console.log('Cannot load an image! Try again or change in-game options', error);
+    }
   }
 
   renderBack() {
