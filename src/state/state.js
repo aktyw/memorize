@@ -1,5 +1,11 @@
-import { opacityTime } from './helper.js';
-import { game } from './index.js';
+import { opacityTime } from '../utils/helper';
+import { game } from '../index.js';
+import room1 from '../assets/room-1.jpg';
+import room2 from '../assets/room-2.jpg';
+import room3 from '../assets/room-3.jpg';
+import room4 from '../assets/room-4.jpg';
+import room5 from '../assets/room-5.jpg';
+import room6 from '../assets/room-6.jpg';
 
 class GameState {
   points = 0;
@@ -10,13 +16,7 @@ class GameState {
     time: [16, 25, 35, 45, 60],
     pointsMulti: [1, 2, 3, 4, 5],
     cards: [4, 8, 12, 16, 20],
-    background: [
-      './assets/room-4.jpg',
-      './assets/room-3.jpg',
-      './assets/room-2.jpg',
-      './assets/room-5.jpg',
-      './assets/room-6.jpg',
-    ],
+    background: [room1, room2, room3, room4, room5, room6],
   };
   background = this.levelsOpts.background[this.level - 1];
   time = this.levelsOpts.time[this.level - 1];

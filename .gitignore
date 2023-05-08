@@ -1,2 +1,24 @@
-node_modules\
+# Ignore node_modules directory
+node_modules/
+
+# Ignore any local configuration files
+.env
+config.js
+
+# Ignore built files
+/dist
+
+# Ignore any log files
+*.log
+logs/
+
+# Ignore any temporary files
+*.tmp
+*.swp
+*.bak
+
+# Ignore VS Code configuration
+.vscode/
+.parcel-cache
+
 todo.txt

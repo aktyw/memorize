@@ -1,5 +1,5 @@
-import { state } from './state.js';
-import { game } from './index.js';
+import { state } from '../state/state.js';
+import { game } from '../index.js';
 
 export default class Card {
   parent;
@@ -32,10 +32,7 @@ export default class Card {
   renderImage() {
     this.image = document.createElement('img');
     this.image.classList.add('card__image');
-    this.image.setAttribute(
-      'src',
-      `https://source.unsplash.com/random/${Math.random() * 10000}`
-    );
+    this.image.setAttribute('src', `https://source.unsplash.com/random/${Math.random() * 10000}`);
     this.image.setAttribute('draggable', `false`);
     this.card.appendChild(this.image);
   }

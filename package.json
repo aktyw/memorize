@@ -1,12 +1,24 @@
 {
-  "name": "Memory Cards Game",
+  "name": "memorize",
   "version": "0.2.0",
   "description": "",
-  "main": "index.js",
+  "source": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "parcel",
+    "dev": "parcel serve",
+    "build": "parcel build",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint --fix ."
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "Arek Tywonek",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.40.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "parcel": "^2.8.3",
+    "prettier": "^2.8.8"
+  }
 }

@@ -1,4 +1,4 @@
-import { game } from './index.js';
+import { game } from '../index.js';
 
 export default class Menu {
   parent = document.body;

@@ -1,7 +1,7 @@
-import { getRandomNumber } from './helper.js';
-import { state } from './state.js';
+import { getRandomNumber } from '../utils/helper.js';
+import { state } from '../state/state.js';
 import Card from './card.js';
-import { game, menu } from './index.js';
+import { game, menu } from '../index.js';
 
 export default class GameStructure {
   parent = document.body;
@@ -113,9 +113,9 @@ export default class GameStructure {
                 ? `Congratulations! You have won the game.<br>Gathered <span class="summary__info-color">${
                     state.points
                   }</span> ${state.points === 1 ? 'point' : 'points'}`
-                : `You have lost the game.<br>Gathered <span class="summary__info-color">${
-                    state.points
-                  }</span> ${state.points === 1 ? 'point' : 'points'}`
+                : `You have lost the game.<br>Gathered <span class="summary__info-color">${state.points}</span> ${
+                    state.points === 1 ? 'point' : 'points'
+                  }`
             }</span>
           </div>
           <div class="summary__btn-container">

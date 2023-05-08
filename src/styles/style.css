@@ -16,7 +16,7 @@ body {
   width: 100vw;
   height: 100vh;
   font-family: 'Oxanium';
-  background-image: url('./assets/room-4.jpg');
+  background-image: url('../assets/room-4.jpg');
   background-size: cover;
   background-position: center;
 }
@@ -61,7 +61,7 @@ body {
 }
 
 .card-back {
-  background: url('/assets/card.jpg');
+  background: url('../assets/card.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -121,7 +121,7 @@ body {
   place-items: center;
   width: 100vw;
   height: 100vh;
-  background: url(./assets/room.jpg);
+  background: url(../assets/room.jpg);
   background-position: center;
   background-repeat: no-repeat;
   user-select: none;
