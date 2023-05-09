@@ -157,6 +157,41 @@ export default class GameStructure {
     this.init();
   }
 
+  startCountdown = () => {
+    state.countdown = setInterval(() => {
+      if (state.currentTime > 0 && !state.isRemovedAllCards()) {
+        state.currentTime--;
+        this.showUI();
+      } else {
+        this.checkGameStatus();
+      }
+    }, state.second);
+  };
+
+  checkGameStatus() {
+    clearInterval(state.countdown);
+    state.isGameOver = true;
+    state.isRemovedAllCards() ? this.handleLevelWin() : this.handleGameEnd();
+  }
+
+  handleLevelWin() {
+    if (state.level === state.maxLevel) {
+      state.points += state.currentTime;
+      state.isGameWon = true;
+      this.handleGameEnd();
+      return;
+    }
+    state.level++;
+    state.points += state.currentTime;
+    state.clearLevelStats();
+    this.startGame();
+  }
+
+  handleGameEnd() {
+    this.showSummary();
+    state.clearGameStats();
+  }
+
   resetDOM() {
     this.parent.innerHTML = '';
     this.gameContainer = null;
@@ -166,7 +201,7 @@ export default class GameStructure {
 
   prepStartGame() {
     setTimeout(() => {
-      state.startCountdown();
+      this.startCountdown();
     }, state.timeToStart);
   }
 }

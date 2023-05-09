@@ -1,5 +1,4 @@
 import { opacityTime } from '../utils/helper';
-import { game } from '../index.js';
 import room1 from '../assets/room-1.jpg';
 import room2 from '../assets/room-2.jpg';
 import room3 from '../assets/room-3.jpg';
@@ -105,44 +104,44 @@ class GameState {
     this.removedCards += amount;
   }
 
-  startCountdown = () => {
-    this.countdown = setInterval(() => {
-      if (this.currentTime > 0 && !this.isRemovedAllCards()) {
-        this.currentTime--;
-        game.showUI();
-      } else {
-        this.checkGameStatus();
-      }
-    }, this.second);
-  };
+  // startCountdown = () => {
+  //   this.countdown = setInterval(() => {
+  //     if (this.currentTime > 0 && !this.isRemovedAllCards()) {
+  //       this.currentTime--;
+  //       game.showUI();
+  //     } else {
+  //       this.checkGameStatus();
+  //     }
+  //   }, this.second);
+  // };
 
   isRemovedAllCards() {
     return this.allCards.length === this.removedCards;
   }
 
-  checkGameStatus() {
-    clearInterval(this.countdown);
-    this.isGameOver = true;
-    this.isRemovedAllCards() ? this.handleLevelWin() : this.handleGameEnd();
-  }
+  // checkGameStatus() {
+  //   clearInterval(this.countdown);
+  //   this.isGameOver = true;
+  //   this.isRemovedAllCards() ? this.handleLevelWin() : this.handleGameEnd();
+  // }
 
-  handleLevelWin() {
-    if (this.level === this.maxLevel) {
-      this.points += this.currentTime;
-      this.isGameWon = true;
-      this.handleGameEnd();
-      return;
-    }
-    this.level++;
-    this.points += this.currentTime;
-    this.clearLevelStats();
-    game.startGame();
-  }
+  // handleLevelWin() {
+  //   if (this.level === this.maxLevel) {
+  //     this.points += this.currentTime;
+  //     this.isGameWon = true;
+  //     this.handleGameEnd();
+  //     return;
+  //   }
+  //   this.level++;
+  //   this.points += this.currentTime;
+  //   this.clearLevelStats();
+  //   game.startGame();
+  // }
 
-  handleGameEnd() {
-    game.showSummary();
-    this.clearGameStats();
-  }
+  // handleGameEnd() {
+  //   game.showSummary();
+  //   this.clearGameStats();
+  // }
 
   clearGameStats() {
     this.saveHighScore();
