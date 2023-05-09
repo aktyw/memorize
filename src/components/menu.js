@@ -1,6 +1,6 @@
 import { game } from '../index.js';
 import { state } from '../state/state.js';
-import { menuSong, buttonSound } from '../components/audio';
+import { menuSongs, buttonSound } from '../components/audio';
 
 export default class Menu {
   parent = document.body;
@@ -12,7 +12,9 @@ export default class Menu {
   menuBtn;
   soundsBtn;
   musicBtn;
-  menuSoundsState = 'sounds on';
+  nextSongBtn;
+  currentSongIndex = 0;
+  menuSoundsState = 'disable sounds';
   menuMusicState = 'play music';
   difficulty = this.difficultyLevel;
 
@@ -58,8 +60,6 @@ export default class Menu {
     this.optionsBtn = this.render('button', ['btn', 'btn-menu', 'btn-options'], this.btnContainer, 'Options');
     this.scoreBtn = this.render('button', ['btn', 'btn-menu'], this.btnContainer, 'High scores');
 
-    this.setMusicState();
-    
     this.handleEvents();
   }
 
@@ -68,13 +68,22 @@ export default class Menu {
     this.difficulty = this.render('button', ['btn', 'btn-difficulty'], this.btnContainer, this.difficultyLevel);
     this.render('h2', ['menu-subtitle'], this.btnContainer, 'Audio');
 
-    this.soundsBtn = this.render('button', ['btn', 'btn-menu', 'btn-sounds'], this.btnContainer, this.menuSoundsState);
+    this.soundsBtn = this.render(
+      'button',
+      ['btn', 'btn-menu', 'btn-sounds', 'btn-menu-active'],
+      this.btnContainer,
+      this.menuSoundsState
+    );
     this.musicBtn = this.render('button', this.musicBtnClass, this.btnContainer, this.menuMusicState);
+    this.nextSongBtn = this.render('button', ['btn', 'btn-next-song'], this.btnContainer, 'Next song');
     this.menuBtn = this.render('button', ['btn', 'btn-menu', 'btn-back'], this.btnContainer, 'main menu');
 
+    this.setAudioState();
 
+    this.soundsBtn.addEventListener('click', this.toggleSounds.bind(this));
     this.difficulty.addEventListener('click', this.handleChangeDifficulty.bind(this));
-    this.musicBtn.addEventListener('click', this.toggleMusic.bind(this));    
+    this.musicBtn.addEventListener('click', this.toggleMusic.bind(this));
+    this.nextSongBtn.addEventListener('click', this.playNextSong.bind(this));
     this.menuBtn.addEventListener('click', this.showMainMenu.bind(this));
   }
 
@@ -84,42 +93,75 @@ export default class Menu {
     this.menuBtn.addEventListener('click', this.showMainMenu.bind(this));
   }
 
-  startGame() {
-    this.menu.remove();
-    game.startGame();
-    this.pauseMusic();
-  }
-
   startMusic() {
-    try {
-      menuSong.play();
-      state.audio.isPlayInMenu = true;
-      this.musicBtn.textContent = 'stop music';
-      this.musicBtn.classList.add('btn-menu-active');
-    } catch (error) {
-      console.log(error);
-    }
+    menuSongs[this.currentSongIndex].play();
+    state.audio.isPlayMusic = true;
+    this.musicBtn.textContent = 'stop music';
+    this.musicBtn.classList.add('btn-menu-active');
   }
 
   pauseMusic() {
-    menuSong.pause();
-    state.audio.isPlayInMenu = false;
+    menuSongs[this.currentSongIndex].pause();
+    state.audio.isPlayMusic = false;
     this.musicBtn.textContent = 'play music';
     this.musicBtn.classList.remove('btn-menu-active');
   }
 
   toggleMusic() {
-    if (state.audio.isPlayInMenu) {
+    if (state.audio.isPlayMusic) {
       this.pauseMusic();
     } else this.startMusic();
   }
 
+  playNextSong() {
+    this.pauseMusic();
+    (this.currentSongIndex + 1) % menuSongs.length === 0 ? (this.currentSongIndex = 0) : this.currentSongIndex++;
+    this.startMusic();
+  }
+
+  enableSounds() {
+    state.audio.isSoundsActive = true;
+    this.soundsBtn.textContent = 'Disable sounds';
+    this.soundsBtn.classList.add('btn-menu-active');
+  }
+
+  disableSounds() {
+    state.audio.isSoundsActive = false;
+    this.soundsBtn.textContent = 'Enable sounds';
+    this.soundsBtn.classList.remove('btn-menu-active');
+  }
+
+  toggleSounds() {
+    if (state.audio.isSoundsActive) {
+      this.disableSounds();
+    } else this.enableSounds();
+  }
+
+  playButtonMenuSound() {
+    buttonSound.play();
+  }
+
+  handlePlaySound(e) {
+    if (e.target.closest('.btn')) {
+      this.playButtonMenuSound();
+    }
+  }
+
+  setAudioState() {
+    this.setMusicState();
+    this.setSoundState();
+  }
+
   setMusicState() {
-    state.audio.isPlayInMenu ? (this.menuMusicState = 'stop music') : (this.menuMusicState = 'play music');
+    state.audio.isPlayMusic ? (this.menuMusicState = 'stop music') : (this.menuMusicState = 'play music');
+  }
+
+  setSoundState() {
+    state.audio.isSoundsActive ? (this.menuSoundsState = 'Disable sounds') : (this.menuSoundsState = 'Enable sounds');
   }
 
   get musicBtnClass() {
-    return state.audio.isPlayInMenu
+    return state.audio.isPlayMusic
       ? ['btn', 'btn-menu', 'btn-music', 'btn-menu-active']
       : ['btn', 'btn-menu', 'btn-music'];
   }
@@ -153,14 +195,10 @@ export default class Menu {
     this.btnContainer.innerHTML = '';
   }
 
-  playButtonMenuSound() {
-    buttonSound.play();
-  }
-
-  handlePlaySound(e) {
-    if (e.target.closest('.btn')) {
-      this.playButtonMenuSound();
-    }
+  startGame() {
+    this.menu.remove();
+    game.startGame();
+    this.pauseMusic();
   }
 
   removeListeners() {

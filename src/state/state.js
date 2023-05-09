@@ -42,8 +42,8 @@ class GameState {
   timeOpacity = opacityTime / 2;
   userShouldWait = false;
   audio = {
-    isPlayInMenu: false,
-    isPlayInGame: false,
+    isPlayMusic: false,
+    isSoundsActive: true,
   };
 
   changeDifficulty() {
