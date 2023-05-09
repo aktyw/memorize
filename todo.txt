@@ -2,7 +2,6 @@ high score(locale storage) and allow to input username
 async card images load - and local hosted images, store 20 imgs
 
 add timer sound when time is running out
-add sounds effect - flipping cards, music retro wave, next level, game win, 
 
 grid bigger on desktop
 grid center on mobile and little bit bigger 

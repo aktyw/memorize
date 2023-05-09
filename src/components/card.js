@@ -141,8 +141,8 @@ export default class Card {
   }
 
   changeStats() {
-    state.addPoints = state.level;
-    state.addRemovedCards = 2;
+    state.points = state.level;
+    state.removedCards = 2;
     game.showUI();
   }
 

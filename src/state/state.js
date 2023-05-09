@@ -7,8 +7,8 @@ import room5 from '../assets/room-5.jpg';
 import room6 from '../assets/room-6.jpg';
 
 class GameState {
-  points = 0;
-  level = 1;
+  #points = 0;
+  #level = 1;
   maxLevel = 5;
   difficulty = {
     easy: true,
@@ -29,10 +29,10 @@ class GameState {
   currentTime = this.levelOptions.time[this.currentDifficultyIndex][this.level - 1];
   cardAmount = this.levelOptions.cards[this.level - 1];
   allCards = [];
-  removedCards = 0;
+  #removedCards = 0;
   openCards = [];
-  isGameOver = false;
-  isGameStart = false;
+  #isGameOver = false;
+  #isGameStart = false;
   isGameWon = false;
   timeToFlip = 1000;
   timeToStart = 1500;
@@ -40,7 +40,7 @@ class GameState {
   countdown;
   timeOpacity = opacityTime / 2;
   userShouldWait = false;
-  audio = {
+  #audio = {
     isPlayMusic: false,
     isSoundsActive: true,
   };
@@ -59,10 +59,6 @@ class GameState {
     }
   }
 
-  get addPoints() {
-    return this.points;
-  }
-
   get currentDifficulty() {
     // eslint-disable-next-line no-unused-vars
     const [difficultyName] = Object.entries(this.difficulty).find(([_, value]) => value);
@@ -75,78 +71,54 @@ class GameState {
     return currentDifficultyIndex;
   }
 
-  set addPoints(amount) {
-    this.points += amount * this.levelOptions.pointsMulti[this.level - 1];
+  get points() {
+    return this.#points;
   }
 
-  get levelNum() {
-    return this.level;
+  set points(amount) {
+    this.#points += amount * this.levelOptions.pointsMulti[this.level - 1];
   }
 
-  get audioSettings() {
-    return this.audio;
+  get level() {
+    return this.#level;
+  }
+
+  set level(state) {
+    this.#level = state;
+  }
+
+  get audio() {
+    return this.#audio;
+  }
+
+  set isGameOver(state) {
+    this.#isGameOver = state;
   }
 
   get isGameOver() {
-    return this.isGameOver;
+    return this.#isGameOver;
   }
 
   get isGameStart() {
-    return this.isGameStart;
+    return this.#isGameStart;
   }
 
   set isGameStart(value) {
-    console.log();
-    this.isGameStart = value;
+    this.#isGameStart = value;
   }
 
-  set addRemovedCards(amount) {
-    this.removedCards += amount;
+  set removedCards(amount) {
+    this.#removedCards += amount;
   }
-
-  // startCountdown = () => {
-  //   this.countdown = setInterval(() => {
-  //     if (this.currentTime > 0 && !this.isRemovedAllCards()) {
-  //       this.currentTime--;
-  //       game.showUI();
-  //     } else {
-  //       this.checkGameStatus();
-  //     }
-  //   }, this.second);
-  // };
 
   isRemovedAllCards() {
-    return this.allCards.length === this.removedCards;
+    return this.allCards.length === this.#removedCards;
   }
-
-  // checkGameStatus() {
-  //   clearInterval(this.countdown);
-  //   this.isGameOver = true;
-  //   this.isRemovedAllCards() ? this.handleLevelWin() : this.handleGameEnd();
-  // }
-
-  // handleLevelWin() {
-  //   if (this.level === this.maxLevel) {
-  //     this.points += this.currentTime;
-  //     this.isGameWon = true;
-  //     this.handleGameEnd();
-  //     return;
-  //   }
-  //   this.level++;
-  //   this.points += this.currentTime;
-  //   this.clearLevelStats();
-  //   game.startGame();
-  // }
-
-  // handleGameEnd() {
-  //   game.showSummary();
-  //   this.clearGameStats();
-  // }
 
   clearGameStats() {
     this.saveHighScore();
-    this.level = 1;
-    this.points = 0;
+    this.#level = 1;
+    this.#points = 0;
 
     this.clearLevelStats();
   }
@@ -156,19 +128,15 @@ class GameState {
     this.cardAmount = this.levelOptions.cards[this.level - 1];
     this.background = this.levelOptions.background[this.level - 1];
     this.allCards.length = 0;
-    this.removedCards = 0;
+    this.#removedCards = 0;
     this.openCards.length = 0;
-    this.isGameOver = false;
-    this.isGameStart = false;
+    this.#isGameOver = false;
+    this.#isGameStart = false;
     this.isGameWon = false;
     this.userShouldWait = false;
   }
 
   saveHighScore() {}
-
-  showMessage(msg) {
-    console.log(msg);
-  }
 }
 
 export const state = new GameState();

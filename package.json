@@ -6,6 +6,7 @@
   "scripts": {
     "start": "parcel",
     "dev": "parcel serve",
+    "dev-m": "parcel serve index.html --host",
     "build": "parcel build",
     "lint:check": "eslint .",
     "lint:fix": "eslint --fix ."
