@@ -1,6 +1,6 @@
 import { state } from '../state/state.js';
 import { game } from '../index.js';
-import { flipCardSound } from './audio.js';
+import { flipCardSound, cardSuccessSound } from './audio.js';
 import { handleSound } from '../utils/handleSound.js';
 
 export default class Card {
@@ -105,6 +105,7 @@ export default class Card {
   checkCards() {
     if (!this.canCheckCards()) return;
     if (this.canRemoveCards()) {
+      handleSound(cardSuccessSound);
       this.removeCards();
       return;
     }
