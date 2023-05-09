@@ -33,6 +33,10 @@ class GameState {
   countdown;
   timeOpacity = opacityTime / 2;
   userShouldWait = false;
+  music = {
+    isPlayInMenu: false,
+    isPlayInGame: false,
+  };
 
   get addPoints() {
     return this.points;
@@ -44,6 +48,10 @@ class GameState {
 
   get levelNum() {
     return this.level;
+  }
+
+  get music() {
+    return this.music;
   }
 
   get isGameOver() {
