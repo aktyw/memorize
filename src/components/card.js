@@ -92,7 +92,7 @@ export default class Card {
       !this.isSameCard() &&
       !this.card.classList.contains('hidden') &&
       state.isGameStart &&
-      state.time !== 0
+      state.currentTime !== 0
     );
   }
 

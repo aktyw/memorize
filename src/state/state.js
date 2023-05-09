@@ -11,16 +11,24 @@ class GameState {
   points = 0;
   level = 1;
   maxLevel = 5;
-  levelsOpts = {
-    // time: [6, 15, 25, 30, 40],
-    time: [16, 25, 35, 45, 60],
+  difficulty = {
+    easy: true,
+    medium: false,
+    hard: false,
+  };
+  levelOptions = {
+    time: [
+      [16, 25, 35, 45, 60],
+      [6, 15, 25, 30, 40],
+      [3, 12, 18, 24, 30],
+    ],
     pointsMulti: [1, 2, 3, 4, 5],
     cards: [4, 8, 12, 16, 20],
     background: [room1, room2, room3, room4, room5, room6],
   };
-  background = this.levelsOpts.background[this.level - 1];
-  time = this.levelsOpts.time[this.level - 1];
-  cardAmount = this.levelsOpts.cards[this.level - 1];
+  background = this.levelOptions.background[this.level - 1];
+  currentTime = this.levelOptions.time[this.currentDifficultyIndex][this.level - 1];
+  cardAmount = this.levelOptions.cards[this.level - 1];
   allCards = [];
   removedCards = 0;
   openCards = [];
@@ -38,12 +46,38 @@ class GameState {
     isPlayInGame: false,
   };
 
+  changeDifficulty() {
+    const difficultyKeys = Object.keys(this.difficulty);
+    const currentDifficultyIndex = difficultyKeys.findIndex((key) => this.difficulty[key]);
+
+    if (currentDifficultyIndex !== -1) {
+      this.difficulty[difficultyKeys[currentDifficultyIndex]] = false;
+
+      const nextDifficultyIndex = (currentDifficultyIndex + 1) % difficultyKeys.length;
+      this.difficulty[difficultyKeys[nextDifficultyIndex]] = true;
+
+      this.currentTime = this.levelOptions.time[this.currentDifficultyIndex][this.level - 1];
+    }
+  }
+
   get addPoints() {
     return this.points;
   }
 
+  get currentDifficulty() {
+    const [difficultyName] = Object.entries(this.difficulty).find(([_, value]) => value);
+    console.log(this.difficulty);
+    return difficultyName;
+  }
+
+  get currentDifficultyIndex() {
+    const difficultyKeys = Object.keys(this.difficulty);
+    const currentDifficultyIndex = difficultyKeys.findIndex((key) => this.difficulty[key]);
+    return currentDifficultyIndex;
+  }
+
   set addPoints(amount) {
-    this.points += amount * this.levelsOpts.pointsMulti[this.level - 1];
+    this.points += amount * this.levelOptions.pointsMulti[this.level - 1];
   }
 
   get levelNum() {
@@ -73,8 +107,8 @@ class GameState {
 
   startCountdown = () => {
     this.countdown = setInterval(() => {
-      if (this.time > 0 && !this.isRemovedAllCards()) {
-        this.time--;
+      if (this.currentTime > 0 && !this.isRemovedAllCards()) {
+        this.currentTime--;
         game.showUI();
       } else {
         this.checkGameStatus();
@@ -94,13 +128,13 @@ class GameState {
 
   handleLevelWin() {
     if (this.level === this.maxLevel) {
-      this.points += this.time;
+      this.points += this.currentTime;
       this.isGameWon = true;
       this.handleGameEnd();
       return;
     }
     this.level++;
-    this.points += this.time;
+    this.points += this.currentTime;
     this.clearLevelStats();
     game.startGame();
   }
@@ -119,9 +153,9 @@ class GameState {
   }
 
   clearLevelStats() {
-    this.time = this.levelsOpts.time[this.level - 1];
-    this.cardAmount = this.levelsOpts.cards[this.level - 1];
-    this.background = this.levelsOpts.background[this.level - 1];
+    this.currentTime = this.levelOptions.time[this.currentDifficultyIndex][this.level - 1];
+    this.cardAmount = this.levelOptions.cards[this.level - 1];
+    this.background = this.levelOptions.background[this.level - 1];
     this.allCards.length = 0;
     this.removedCards = 0;
     this.openCards.length = 0;

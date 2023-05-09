@@ -84,8 +84,9 @@ export default class GameStructure {
     const levelEl = document.querySelector('.stats__level');
 
     pointsEl.textContent = `points: ${state.points}`;
-    timeEl.textContent = `time: ${state.time}`;
+    timeEl.textContent = `time: ${state.currentTime}`;
     levelEl.textContent = `level: ${state.level}`;
+    console.log('show ui', state.currentTime, state.currentDifficulty);
   }
 
   renderLevelTitle() {

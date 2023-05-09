@@ -13,7 +13,6 @@ body {
   justify-content: center;
   align-items: flex-start;
   grid-template-rows: 200px 1fr;
-  width: 100vw;
   height: 100vh;
   font-family: 'Oxanium';
   background-image: url('../assets/room-4.jpg');
@@ -145,11 +144,16 @@ body {
 }
 
 .menu-title,
-.level-title {
+.level-title,
+.menu-subtitle {
   color: white;
   z-index: 100;
   font-size: 86px;
   text-transform: uppercase;
+}
+
+.menu-subtitle {
+  font-size: 36px;
 }
 
 .level-title {
@@ -161,18 +165,11 @@ body {
   transform: translate(-50%, -50%);
   user-select: none;
   pointer-events: none;
-  transition: opacity .4s;
+  transition: opacity 0.4s;
 }
 
 .is-visible {
   opacity: 1;
-}
-
-.btn-container {
-  display: flex;
-  flex-direction: column;
-  z-index: 100;
-  gap: 20px;
 }
 
 .summary {
@@ -193,7 +190,7 @@ body {
 }
 
 .summary::before {
-  content: "";
+  content: '';
   position: fixed;
   width: 100vw;
   height: 100vh;
@@ -210,12 +207,21 @@ body {
 }
 
 .summary__info-color {
-  color:rgb(202, 70, 209);
+  color: rgb(202, 70, 209);
   font-weight: bold;
 }
 
 .summary__btn-container {
   display: flex;
+  gap: 20px;
+}
+
+.btn-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
   gap: 20px;
 }
 
@@ -232,11 +238,36 @@ body {
   transition: background-color 0.3s, color 0.3s;
 }
 
-.btn:hover,
-.btn:focus-within {
+.btn-menu {
+  position: relative;
+}
+
+.btn-menu-active {
   background-color: rgb(8, 27, 57);
   color: rgb(202, 70, 209);
 }
+
+/* .btn-menu::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: blueviolet;
+} */
+
+/* .btn-menu:focus-within::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: rgb(22, 99, 92);
+} */
 
 .summary__btn {
   font-size: 24px;
@@ -263,10 +294,6 @@ body {
     width: 75px;
     height: 95px;
   }
-
-  .menu {
-  }
-
   .menu-title,
   .level-title {
     font-size: 48px;
