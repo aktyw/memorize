@@ -1,6 +1,6 @@
 import { Howl } from 'howler';
 import { state } from '../state/state';
-
+import { menu } from '../components/menu';
 // eslint-disable-next-line node/no-missing-require
 const lofiSong = require('url:../assets/music/lofi.mp3');
 // eslint-disable-next-line node/no-missing-require
@@ -11,7 +11,8 @@ const retroOneSong = require('url:../assets/music/retro_80.mp3');
 const retroTwoSong = require('url:../assets/music/retro_one.mp3');
 // eslint-disable-next-line node/no-missing-require
 const retroThreeSong = require('url:../assets/music/retro_synth.mp3');
-
+// eslint-disable-next-line node/no-missing-require
+const cardWhoosh = require('url:../assets/sounds/whoosh.mp3');
 const songs = [lofiSong, retroOneSong, retroTwoSong, retroThreeSong];
 
 export const menuSongs = songs.map(
@@ -23,12 +24,17 @@ export const menuSongs = songs.map(
         state.audio.isPlayMusic = true;
       },
       onpause: () => (state.audio.isPlayMusic = false),
-      onend: () => {
-        console.log('Finish', this);
+      onend: function () {
+        menu.playNextSong();
       },
       volume: 0.5,
     })
 );
+export const flipCardSound = new Howl({
+  src: [cardWhoosh],
+  autoplay: false,
+  volume: 0.3,
+});
 
 export const buttonSound = new Howl({
   src: [clickTwoSound],

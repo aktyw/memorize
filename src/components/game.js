@@ -1,7 +1,7 @@
 import { getRandomNumber } from '../utils/helper.js';
 import { state } from '../state/state.js';
 import Card from './card.js';
-import { game, menu } from '../index.js';
+import { menu } from '../components/menu';
 
 export default class GameStructure {
   parent = document.body;

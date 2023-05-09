@@ -2,7 +2,7 @@ import { game } from '../index.js';
 import { state } from '../state/state.js';
 import { menuSongs, buttonSound } from '../components/audio';
 
-export default class Menu {
+class Menu {
   parent = document.body;
   menu;
   btnContainer;
@@ -218,3 +218,5 @@ export default class Menu {
     this.scoreBtn.addEventListener('click', this.showHighScores.bind(this));
   }
 }
+
+export const menu = new Menu();
