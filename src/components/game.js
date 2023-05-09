@@ -86,7 +86,6 @@ export default class GameStructure {
     pointsEl.textContent = `points: ${state.points}`;
     timeEl.textContent = `time: ${state.currentTime}`;
     levelEl.textContent = `level: ${state.level}`;
-    console.log('show ui', state.currentTime, state.currentDifficulty);
   }
 
   renderLevelTitle() {
@@ -114,7 +113,7 @@ export default class GameStructure {
                 ? `Congratulations! You have won the game.<br>Gathered <span class="summary__info-color">${
                     state.points
                   }</span> ${state.points === 1 ? 'point' : 'points'}`
-                : `You have lost the game.<br>Gathered <span class="summary__info-color">${state.points}</span> ${
+                : `Game over!.<br>Gathered <span class="summary__info-color">${state.points}</span> ${
                     state.points === 1 ? 'point' : 'points'
                   }`
             }</span>

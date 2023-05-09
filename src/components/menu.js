@@ -104,8 +104,10 @@ class Menu {
   pauseMusic() {
     menuSongs[this.currentSongIndex].pause();
     state.audio.isPlayMusic = false;
-    this.musicBtn.textContent = 'play music';
-    this.musicBtn.classList.remove('btn-menu-active');
+    if (this.musicBtn) {
+      this.musicBtn.textContent = 'play music';
+      this.musicBtn.classList.remove('btn-menu-active');
+    }
   }
 
   toggleMusic() {

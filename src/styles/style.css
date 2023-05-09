@@ -9,25 +9,33 @@
 
 body {
   position: relative;
-  display: grid;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: flex-start;
-  grid-template-rows: 200px 1fr;
+  flex-direction: column;
   height: 100vh;
+  height: 100svh;
+  max-width: 1440px;
+  overflow: hidden;
   font-family: 'Oxanium';
   background-image: url('../assets/room-4.jpg');
   background-size: cover;
   background-position: center;
 }
 
-
+header {
+  max-width: 1440px;
+  position: fixed;
+  top: 0;
+}
 
 .memory {
   display: grid;
   justify-items: center;
   justify-content: center;
-  max-width: 1440px;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  align-items: center;
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   padding: 40px 0;
   perspective: 2500px;
@@ -279,19 +287,39 @@ body {
 
 @media all and (max-width: 768px) {
   body {
-    grid-template-rows: 160px 1fr;
+    place-items: center;
   }
+
+  .ui {
+    padding: 0 10px;
+  }
+
   .memory {
     gap: 10px;
     padding: 10px 0;
   }
+
   .card {
-    width: 75px;
-    height: 95px;
+    width: 80px;
+    height: 105px;
   }
+
   .menu-title,
   .level-title {
-    font-size: 48px;
+    font-size: 42px;
+  }
+
+  .stats {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 100%;
+  }
+
+  .stats__time,
+  .stats__points,
+  .stats__level {
+    font-size: 24px;
   }
 
   .summary {

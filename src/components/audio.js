@@ -13,6 +13,8 @@ const retroTwoSong = require('url:../assets/music/retro_one.mp3');
 const retroThreeSong = require('url:../assets/music/retro_synth.mp3');
 // eslint-disable-next-line node/no-missing-require
 const cardWhoosh = require('url:../assets/sounds/whoosh.mp3');
+// eslint-disable-next-line node/no-missing-require
+
 const songs = [lofiSong, retroOneSong, retroTwoSong, retroThreeSong];
 
 export const menuSongs = songs.map(
