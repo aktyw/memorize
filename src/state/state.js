@@ -41,7 +41,7 @@ class GameState {
   countdown;
   timeOpacity = opacityTime / 2;
   userShouldWait = false;
-  music = {
+  audio = {
     isPlayInMenu: false,
     isPlayInGame: false,
   };
@@ -66,7 +66,6 @@ class GameState {
 
   get currentDifficulty() {
     const [difficultyName] = Object.entries(this.difficulty).find(([_, value]) => value);
-    console.log(this.difficulty);
     return difficultyName;
   }
 
@@ -84,8 +83,8 @@ class GameState {
     return this.level;
   }
 
-  get music() {
-    return this.music;
+  get audioSettings() {
+    return this.audio;
   }
 
   get isGameOver() {

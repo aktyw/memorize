@@ -1,13 +1,5 @@
-git squash feat/gamelevels
-
-options
-toggle difficulty EASY and NORMAL
-sound on off
-
-
 high score(locale storage) and allow to input username
 async card images load - and local hosted images, store 20 imgs
-
 
 add timer sound when time is running out
 add sounds effect - flipping cards, music retro wave, next level, game win, 
@@ -24,6 +16,3 @@ gsap animations
 accesibility
 
 refactor
-
-
-change menu sounds click btn

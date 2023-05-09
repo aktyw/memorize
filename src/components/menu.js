@@ -54,26 +54,32 @@ export default class Menu {
   }
 
   renderBtns() {
-    this.startBtn = this.render('button', ['btn', 'btn-menu', 'start-btn'], this.btnContainer, 'Start game');
-    this.optionsBtn = this.render('button', ['btn', 'btn-menu', 'options-btn'], this.btnContainer, 'Options');
+    this.startBtn = this.render('button', ['btn', 'btn-menu', 'btn-start'], this.btnContainer, 'Start game');
+    this.optionsBtn = this.render('button', ['btn', 'btn-menu', 'btn-options'], this.btnContainer, 'Options');
     this.scoreBtn = this.render('button', ['btn', 'btn-menu'], this.btnContainer, 'High scores');
 
     this.setMusicState();
-    this.musicBtn = this.render('button', this.musicBtnClass, this.btnContainer, this.menuMusicState);
+    
     this.handleEvents();
   }
 
   renderOptionBtns() {
-    this.render('h2', ['menu-subtitle'], this.btnContainer, 'Change difficulty');
-    this.difficulty = this.render('button', ['btn', 'difficulty-btn'], this.btnContainer, this.difficultyLevel);
-    this.soundsBtn = this.render('button', ['btn', 'btn-menu', 'sounds-btn'], this.btnContainer, this.menuSoundsState);
-    this.menuBtn = this.render('button', ['btn', 'btn-menu', 'menu-btn'], this.btnContainer, 'main menu');
+    this.render('h2', ['menu-subtitle'], this.btnContainer, 'Difficulty');
+    this.difficulty = this.render('button', ['btn', 'btn-difficulty'], this.btnContainer, this.difficultyLevel);
+    this.render('h2', ['menu-subtitle'], this.btnContainer, 'Audio');
+
+    this.soundsBtn = this.render('button', ['btn', 'btn-menu', 'btn-sounds'], this.btnContainer, this.menuSoundsState);
+    this.musicBtn = this.render('button', this.musicBtnClass, this.btnContainer, this.menuMusicState);
+    this.menuBtn = this.render('button', ['btn', 'btn-menu', 'btn-back'], this.btnContainer, 'main menu');
+
+
     this.difficulty.addEventListener('click', this.handleChangeDifficulty.bind(this));
+    this.musicBtn.addEventListener('click', this.toggleMusic.bind(this));    
     this.menuBtn.addEventListener('click', this.showMainMenu.bind(this));
   }
 
   renderHighScoresBtns() {
-    this.menuBtn = this.render('button', ['btn', 'btn-menu', 'menu-btn'], this.btnContainer, 'main menu');
+    this.menuBtn = this.render('button', ['btn', 'btn-menu', 'btn-menu'], this.btnContainer, 'main menu');
 
     this.menuBtn.addEventListener('click', this.showMainMenu.bind(this));
   }
@@ -87,7 +93,7 @@ export default class Menu {
   startMusic() {
     try {
       menuSong.play();
-      state.music.isPlayInMenu = true;
+      state.audio.isPlayInMenu = true;
       this.musicBtn.textContent = 'stop music';
       this.musicBtn.classList.add('btn-menu-active');
     } catch (error) {
@@ -97,25 +103,25 @@ export default class Menu {
 
   pauseMusic() {
     menuSong.pause();
-    state.music.isPlayInMenu = false;
+    state.audio.isPlayInMenu = false;
     this.musicBtn.textContent = 'play music';
     this.musicBtn.classList.remove('btn-menu-active');
   }
 
   toggleMusic() {
-    if (state.music.isPlayInMenu) {
+    if (state.audio.isPlayInMenu) {
       this.pauseMusic();
     } else this.startMusic();
   }
 
   setMusicState() {
-    state.music.isPlayInMenu ? (this.menuMusicState = 'stop music') : (this.menuMusicState = 'play music');
+    state.audio.isPlayInMenu ? (this.menuMusicState = 'stop music') : (this.menuMusicState = 'play music');
   }
 
   get musicBtnClass() {
-    return state.music.isPlayInMenu
-      ? ['btn', 'btn-menu', 'music-btn', 'btn-menu-active']
-      : ['btn', 'btn-menu', 'music-btn'];
+    return state.audio.isPlayInMenu
+      ? ['btn', 'btn-menu', 'btn-music', 'btn-menu-active']
+      : ['btn', 'btn-menu', 'btn-music'];
   }
 
   showOptions() {
@@ -160,7 +166,6 @@ export default class Menu {
   removeListeners() {
     this.optionsBtn.removeEventListener('click', this.showOptions);
     this.scoreBtn.removeEventListener('click', this.showHighScores);
-    this.musicBtn.removeEventListener('click', this.toggleMusic);
   }
 
   handeSoundEvents() {
@@ -173,6 +178,5 @@ export default class Menu {
     });
     this.optionsBtn.addEventListener('click', this.showOptions.bind(this));
     this.scoreBtn.addEventListener('click', this.showHighScores.bind(this));
-    this.musicBtn.addEventListener('click', this.toggleMusic.bind(this));
   }
 }
