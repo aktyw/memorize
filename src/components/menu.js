@@ -1,6 +1,7 @@
 import { game } from '../index.js';
 import { state } from '../state/state.js';
 import { menuSongs, buttonSound } from '../components/audio';
+import { handleSound } from '../utils/handleSound.js';
 
 class Menu {
   parent = document.body;
@@ -108,9 +109,7 @@ class Menu {
   }
 
   toggleMusic() {
-    if (state.audio.isPlayMusic) {
-      this.pauseMusic();
-    } else this.startMusic();
+    state.audio.isPlayMusic ? this.pauseMusic() : this.startMusic();
   }
 
   playNextSong() {
@@ -138,7 +137,7 @@ class Menu {
   }
 
   playButtonMenuSound() {
-    buttonSound.play();
+    handleSound(buttonSound);
   }
 
   handlePlaySound(e) {

@@ -1,5 +1,7 @@
 import { state } from '../state/state.js';
 import { game } from '../index.js';
+import { flipCardSound } from './audio.js';
+import { handleSound } from '../utils/handleSound.js';
 
 export default class Card {
   parent;
@@ -62,7 +64,7 @@ export default class Card {
     this.canResetState = false;
     state.userShouldWait = false;
     this.card.classList.add('is-flipped');
-
+    handleSound(flipCardSound);
     if (state.openCards.length > 1) {
       setTimeout(() => {
         state.openCards.forEach(({ card }) => {

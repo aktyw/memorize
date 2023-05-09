@@ -65,6 +65,7 @@ class GameState {
   }
 
   get currentDifficulty() {
+    // eslint-disable-next-line no-unused-vars
     const [difficultyName] = Object.entries(this.difficulty).find(([_, value]) => value);
     return difficultyName;
   }

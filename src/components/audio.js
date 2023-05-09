@@ -33,7 +33,7 @@ export const menuSongs = songs.map(
 export const flipCardSound = new Howl({
   src: [cardWhoosh],
   autoplay: false,
-  volume: 0.3,
+  volume: 0.2,
 });
 
 export const buttonSound = new Howl({
