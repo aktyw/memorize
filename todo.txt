@@ -1,17 +1,11 @@
 high score(locale storage) and allow to input username
+
 async card images load - and local hosted images, store 20 imgs
-
 add timer sound when time is running out
-
-grid bigger on desktop
-grid center on mobile and little bit bigger 
-level title smaller on mobile
-bigger and center ui on mobile
 time red when 0 (blinking last 3 sec ?)
-add some dynamic lights on main menu or move image slightly
-refactor style to scss 
 gsap animations
 
 accesibility
 
 refactor
+add nanoid

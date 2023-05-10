@@ -29,7 +29,7 @@ class Menu {
     this.handeSoundEvents();
   }
 
-  render(el = 'div', classlist = [], parent = this.btnContainer, text) {
+  render(el = 'div', classlist = [], text, parent = this.btnContainer) {
     const element = document.createElement(el);
     parent.appendChild(element);
     if (classlist) element.classList.add(...classlist);
@@ -38,52 +38,36 @@ class Menu {
   }
 
   generateMenu() {
-    this.menu = document.createElement('div');
-    this.menu.classList.add('menu');
-    this.parent.appendChild(this.menu);
-
-    const titleContainer = document.createElement('div');
-    titleContainer.classList.add('menu-title-container');
-    this.menu.appendChild(titleContainer);
-
-    this.btnContainer = document.createElement('div');
-    this.btnContainer.classList.add('btn-container');
-    this.menu.appendChild(this.btnContainer);
-
-    const title = document.createElement('h1');
-    title.textContent = 'Memorize';
-    title.classList.add('menu-title');
-    titleContainer.appendChild(title);
+    this.menu = this.render('div', ['menu'], null, this.parent);
+    const titleContainer = this.render('div', ['menu-title-container'], null, this.menu);
+    this.render('h1', ['menu-title'], 'Memorize', titleContainer);
+    this.btnContainer = this.render('div', ['btn-container'], null, this.menu);
   }
 
   renderBtns() {
-    this.startBtn = this.render('button', ['btn', 'btn-menu', 'btn-start'], this.btnContainer, 'Start game');
-    this.optionsBtn = this.render('button', ['btn', 'btn-menu', 'btn-options'], this.btnContainer, 'Options');
-    this.scoreBtn = this.render('button', ['btn', 'btn-menu'], this.btnContainer, 'High scores');
+    this.startBtn = this.render('button', ['btn', 'btn-menu', 'btn-start'], 'Start game');
+    this.optionsBtn = this.render('button', ['btn', 'btn-menu', 'btn-options'], 'Options');
+    this.scoreBtn = this.render('button', ['btn', 'btn-menu'], 'High scores');
 
     this.handleEvents();
   }
 
   renderOptionBtns() {
     this.setAudioState();
-    this.render('h2', ['menu-subtitle'], this.btnContainer, 'Difficulty');
-    this.difficulty = this.render('button', ['btn', 'btn-difficulty'], this.btnContainer, this.difficultyLevel);
-    this.render('h2', ['menu-subtitle'], this.btnContainer, 'Audio');
 
+    this.render('h2', ['menu-subtitle'], 'Difficulty');
+    this.difficulty = this.render('button', ['btn', 'btn-difficulty'], this.difficultyLevel);
+
+    this.render('h2', ['menu-subtitle'], 'Audio');
     this.soundsBtn = this.render(
       'button',
       [...this.getAudioBtnClass('isSoundsActive'), 'btn-sounds'],
-      this.btnContainer,
       this.menuSoundsState
     );
-    this.musicBtn = this.render(
-      'button',
-      [...this.getAudioBtnClass('isPlayMusic'), 'btn-music'],
-      this.btnContainer,
-      this.menuMusicState
-    );
-    this.nextSongBtn = this.render('button', ['btn', 'btn-next-song'], this.btnContainer, 'Next song');
-    this.menuBtn = this.render('button', ['btn', 'btn-menu', 'btn-back'], this.btnContainer, 'main menu');
+    this.musicBtn = this.render('button', [...this.getAudioBtnClass('isPlayMusic'), 'btn-music'], this.menuMusicState);
+    this.nextSongBtn = this.render('button', ['btn', 'btn-next-song'], 'Next song');
+
+    this.menuBtn = this.render('button', ['btn', 'btn-menu', 'btn-back'], 'main menu');
 
     this.soundsBtn.addEventListener('click', this.toggleSounds.bind(this));
     this.difficulty.addEventListener('click', this.handleChangeDifficulty.bind(this));
@@ -101,6 +85,7 @@ class Menu {
   startMusic() {
     menuSongs[this.currentSongIndex].play();
     state.audio.isPlayMusic = true;
+
     this.musicBtn.textContent = 'stop music';
     this.musicBtn.classList.add('btn-menu-active');
   }
@@ -108,6 +93,7 @@ class Menu {
   pauseMusic() {
     menuSongs[this.currentSongIndex].pause();
     state.audio.isPlayMusic = false;
+
     if (this.musicBtn) {
       this.musicBtn.textContent = 'play music';
       this.musicBtn.classList.remove('btn-menu-active');
@@ -126,20 +112,20 @@ class Menu {
 
   enableSounds() {
     state.audio.isSoundsActive = true;
+
     this.soundsBtn.textContent = 'Disable sounds';
     this.soundsBtn.classList.add('btn-menu-active');
   }
 
   disableSounds() {
     state.audio.isSoundsActive = false;
+
     this.soundsBtn.textContent = 'Enable sounds';
     this.soundsBtn.classList.remove('btn-menu-active');
   }
 
   toggleSounds() {
-    if (state.audio.isSoundsActive) {
-      this.disableSounds();
-    } else this.enableSounds();
+    state.audio.isSoundsActive ? this.disableSounds() : this.enableSounds();
   }
 
   playButtonMenuSound() {
@@ -147,9 +133,9 @@ class Menu {
   }
 
   handlePlaySound(e) {
-    if (e.target.closest('.btn')) {
-      this.playButtonMenuSound();
-    }
+    if (!e.target.closest('.btn')) return;
+
+    this.playButtonMenuSound();
   }
 
   setAudioState() {
@@ -169,11 +155,6 @@ class Menu {
     return state.audio[prop] ? ['btn', 'btn-menu', 'btn-menu-active'] : ['btn', 'btn-menu'];
   }
 
-  showOptions() {
-    this.clearContainer();
-    this.renderOptionBtns();
-  }
-
   get difficultyLevel() {
     return state.currentDifficulty;
   }
@@ -183,9 +164,15 @@ class Menu {
     this.difficulty.textContent = this.difficultyLevel;
   }
 
-  showMainMenu() {
+  startGame() {
+    this.menu.remove();
+    game.startGame();
+    this.pauseMusic();
+  }
+
+  showOptions() {
     this.clearContainer();
-    this.renderBtns();
+    this.renderOptionBtns();
   }
 
   showHighScores() {
@@ -193,15 +180,14 @@ class Menu {
     this.renderHighScoresBtns();
   }
 
+  showMainMenu() {
+    this.clearContainer();
+    this.renderBtns();
+  }
+
   clearContainer() {
     this.removeListeners();
     this.btnContainer.innerHTML = '';
-  }
-
-  startGame() {
-    this.menu.remove();
-    game.startGame();
-    this.pauseMusic();
   }
 
   removeListeners() {

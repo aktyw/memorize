@@ -23,6 +23,7 @@
     "prettier": "^2.8.8"
   },
   "dependencies": {
+    "gsap": "^3.11.5",
     "howler": "^2.2.3",
     "nanoid": "^4.0.2"
   }

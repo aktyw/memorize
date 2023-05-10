@@ -4,6 +4,8 @@ import Card from './card.js';
 import { menu } from '../components/menu';
 import { handleSound } from '../utils/handleSound.js';
 import { nextLevelSound } from './audio.js';
+import { makeTimeline } from './animations.js';
+import { createElements } from '../utils/createElements.js';
 
 export default class GameStructure {
   parent = document.body;
@@ -13,13 +15,14 @@ export default class GameStructure {
   summary;
   playAgainBtn;
   mainMenuBtn;
+  bgFull;
+  tl;
 
   init() {
     this.#generateUI();
     this.#generateContainer();
-    this.#makeCards(state.cardAmount);
-    this.#shuffleCards(state.allCards);
-    this.#renderCards();
+    this.#renderSlideBG();
+    this.#handleCards();
     this.showUI();
     this.renderLevelTitle();
     this.showLevel();
@@ -31,8 +34,22 @@ export default class GameStructure {
     this.parent.appendChild(this.gameContainer);
   }
 
-  #makeCards(amount) {
-    for (let i = 0; i < amount / 2; i++) {
+  #renderSlideBG() {
+    this.bgFull = document.createElement('div');
+    this.bgFull.classList.add('bg-full');
+    this.parent.appendChild(this.bgFull);
+
+    this.tl = makeTimeline();
+  }
+
+  #handleCards() {
+    this.#generateCards();
+    this.#shuffleCards();
+    this.#renderCards();
+  }
+
+  #generateCards() {
+    for (let i = 0; i < state.cardAmount / 2; i++) {
       const card = new Card(this.gameContainer);
       const card2 = new Card(this.gameContainer);
       const id = getRandomNumber(100000, 999999);
@@ -45,7 +62,8 @@ export default class GameStructure {
     }
   }
 
-  #shuffleCards(cards) {
+  #shuffleCards() {
+    const cards = state.allCards;
     for (let i = cards.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [cards[i], cards[j]] = [cards[j], cards[i]];
@@ -66,11 +84,8 @@ export default class GameStructure {
     this.ui.classList.add('ui');
     this.parent.appendChild(this.ui);
 
-    const statsCnt = document.createElement('div');
-    const points = document.createElement('span');
-    const time = document.createElement('span');
-    const level = document.createElement('span');
-
+    const [statsCnt, points, time, level] = createElements('div', 'span', 'span', 'span');
+    
     statsCnt.classList.add('stats');
     points.classList.add('stats__points');
     time.classList.add('stats__time');
@@ -157,6 +172,7 @@ export default class GameStructure {
   clearLevel() {
     this.resetDOM();
     this.init();
+    this.tl.play();
   }
 
   startCountdown = () => {
@@ -167,7 +183,7 @@ export default class GameStructure {
       } else {
         this.checkGameStatus();
       }
-    }, state.second);
+    }, state.second * 2);
   };
 
   checkGameStatus() {

@@ -22,7 +22,7 @@ class GameState {
       [3, 12, 20, 25, 30],
     ],
     pointsMulti: [1, 2, 3, 4, 5],
-    cards: [4, 8, 12, 16, 20],
+    cards: [2, 8, 12, 16, 20],
     background: [room1, room2, room3, room4, room5, room6],
   };
   background = this.levelOptions.background[this.level - 1];
