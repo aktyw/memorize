@@ -70,8 +70,18 @@ class Menu {
     this.difficulty = this.render('button', ['btn', 'btn-difficulty'], this.btnContainer, this.difficultyLevel);
     this.render('h2', ['menu-subtitle'], this.btnContainer, 'Audio');
 
-    this.soundsBtn = this.render('button', this.soundBtnClass, this.btnContainer, this.menuSoundsState);
-    this.musicBtn = this.render('button', this.musicBtnClass, this.btnContainer, this.menuMusicState);
+    this.soundsBtn = this.render(
+      'button',
+      [...this.getAudioBtnClass('isSoundsActive'), 'btn-sounds'],
+      this.btnContainer,
+      this.menuSoundsState
+    );
+    this.musicBtn = this.render(
+      'button',
+      [...this.getAudioBtnClass('isPlayMusic'), 'btn-music'],
+      this.btnContainer,
+      this.menuMusicState
+    );
     this.nextSongBtn = this.render('button', ['btn', 'btn-next-song'], this.btnContainer, 'Next song');
     this.menuBtn = this.render('button', ['btn', 'btn-menu', 'btn-back'], this.btnContainer, 'main menu');
 
@@ -155,16 +165,8 @@ class Menu {
     state.audio.isSoundsActive ? (this.menuSoundsState = 'Disable sounds') : (this.menuSoundsState = 'Enable sounds');
   }
 
-  get musicBtnClass() {
-    return state.audio.isPlayMusic
-      ? ['btn', 'btn-menu', 'btn-music', 'btn-menu-active']
-      : ['btn', 'btn-menu', 'btn-music'];
-  }
-
-  get soundBtnClass() {
-    return state.audio.isSoundsActive
-      ? ['btn', 'btn-menu', 'btn-sounds', 'btn-menu-active']
-      : ['btn', 'btn-menu', 'btn-sounds'];
+  getAudioBtnClass(prop) {
+    return state.audio[prop] ? ['btn', 'btn-menu', 'btn-menu-active'] : ['btn', 'btn-menu'];
   }
 
   showOptions() {
