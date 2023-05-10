@@ -20,18 +20,22 @@ export default class Card {
     this.handleEvents();
   }
 
-  generateCard() {
-    this.renderContainer();
-    this.renderImage();
-    this.renderBack();
+  async generateCard() {
+    try {
+      this.#renderContainer();
+      await this.#renderImage();
+      this.#renderBack();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  renderContainer() {
+  #renderContainer() {
     this.card = document.createElement('div');
     this.card.classList.add('card');
   }
 
-  async renderImage() {
+  async #renderImage() {
     try {
       this.image = document.createElement('img');
       this.image.classList.add('card__image');
@@ -41,23 +45,23 @@ export default class Card {
       this.image.setAttribute('draggable', `false`);
       this.card.appendChild(this.image);
     } catch (error) {
-      console.log('Cannot load an image! Try again or change in-game options', error);
+      throw new Error('Cannot load an image! Try again or change in-game options');
     }
   }
 
-  renderBack() {
+  #renderBack() {
     this.back = document.createElement('div');
     this.back.classList.add('card-back');
     this.card.appendChild(this.back);
   }
 
-  showCard() {
+  #showCard() {
     if (!this.canShowCard()) return;
     state.userShouldWait = true;
     this.saveCardObj();
     this.addCard();
     this.handleFlipCard();
-    this.checkCards();
+    this.#checkCards();
   }
 
   handleFlipCard() {
@@ -71,7 +75,7 @@ export default class Card {
           card.classList.remove('is-flipped');
         });
         this.canResetState = true;
-        this.checkCards();
+        this.#checkCards();
         state.userShouldWait = false;
       }, state.timeToFlip);
       return;
@@ -91,18 +95,18 @@ export default class Card {
     return (
       !state.userShouldWait &&
       state.openCards.length < 2 &&
-      !this.isSameCard() &&
+      !this.#isSameCard() &&
       !this.card.classList.contains('hidden') &&
       state.isGameStart &&
       state.currentTime !== 0
     );
   }
 
-  isSameCard() {
+  #isSameCard() {
     return state.openCards[0]?.pos === +this.card.getAttribute('pos');
   }
 
-  checkCards() {
+  #checkCards() {
     if (!this.canCheckCards()) return;
     if (this.canRemoveCards()) {
       handleSound(cardSuccessSound);
@@ -153,6 +157,6 @@ export default class Card {
   }
 
   handleEvents() {
-    this.card.addEventListener('click', this.showCard.bind(this));
+    this.card.addEventListener('click', this.#showCard.bind(this));
   }
 }

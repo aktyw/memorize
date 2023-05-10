@@ -23,6 +23,7 @@
     "prettier": "^2.8.8"
   },
   "dependencies": {
-    "howler": "^2.2.3"
+    "howler": "^2.2.3",
+    "nanoid": "^4.0.2"
   }
 }

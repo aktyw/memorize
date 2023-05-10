@@ -29,7 +29,7 @@ class Menu {
     this.handeSoundEvents();
   }
 
-  render(el = 'div', classlist, parent = this.btnContainer, text) {
+  render(el = 'div', classlist = [], parent = this.btnContainer, text) {
     const element = document.createElement(el);
     parent.appendChild(element);
     if (classlist) element.classList.add(...classlist);
@@ -65,21 +65,15 @@ class Menu {
   }
 
   renderOptionBtns() {
+    this.setAudioState();
     this.render('h2', ['menu-subtitle'], this.btnContainer, 'Difficulty');
     this.difficulty = this.render('button', ['btn', 'btn-difficulty'], this.btnContainer, this.difficultyLevel);
     this.render('h2', ['menu-subtitle'], this.btnContainer, 'Audio');
 
-    this.soundsBtn = this.render(
-      'button',
-      ['btn', 'btn-menu', 'btn-sounds', 'btn-menu-active'],
-      this.btnContainer,
-      this.menuSoundsState
-    );
+    this.soundsBtn = this.render('button', this.soundBtnClass, this.btnContainer, this.menuSoundsState);
     this.musicBtn = this.render('button', this.musicBtnClass, this.btnContainer, this.menuMusicState);
     this.nextSongBtn = this.render('button', ['btn', 'btn-next-song'], this.btnContainer, 'Next song');
     this.menuBtn = this.render('button', ['btn', 'btn-menu', 'btn-back'], this.btnContainer, 'main menu');
-
-    this.setAudioState();
 
     this.soundsBtn.addEventListener('click', this.toggleSounds.bind(this));
     this.difficulty.addEventListener('click', this.handleChangeDifficulty.bind(this));
@@ -165,6 +159,12 @@ class Menu {
     return state.audio.isPlayMusic
       ? ['btn', 'btn-menu', 'btn-music', 'btn-menu-active']
       : ['btn', 'btn-menu', 'btn-music'];
+  }
+
+  get soundBtnClass() {
+    return state.audio.isSoundsActive
+      ? ['btn', 'btn-menu', 'btn-sounds', 'btn-menu-active']
+      : ['btn', 'btn-menu', 'btn-sounds'];
   }
 
   showOptions() {
