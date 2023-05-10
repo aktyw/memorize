@@ -12,7 +12,7 @@ const retroThreeSong = require('url:../assets/music/retro_synth.mp3');
 // eslint-disable-next-line node/no-missing-require
 const cardWhoosh = require('url:../assets/sounds/whoosh.mp3');
 // eslint-disable-next-line node/no-missing-require
-const cardSuccess = require('url:../assets/sounds/interface.mp3');// eslint-disable-next-line node/no-missing-require
+const cardSuccess = require('url:../assets/sounds/interface.mp3'); // eslint-disable-next-line node/no-missing-require
 const nextLevel = require('url:../assets/sounds/success.mp3');
 
 const songs = [lofiSong, retroOneSong, retroThreeSong];
@@ -32,6 +32,7 @@ export const menuSongs = songs.map(
       volume: 0.5,
     })
 );
+
 export const flipCardSound = new Howl({
   src: [cardWhoosh],
   autoplay: false,
@@ -47,10 +48,8 @@ export const cardSuccessSound = new Howl({
 export const nextLevelSound = new Howl({
   src: [nextLevel],
   autoplay: false,
-  volume: 0.15,
+  volume: 0.2,
 });
-
-
 
 export const buttonSound = new Howl({
   src: [clickTwoSound],

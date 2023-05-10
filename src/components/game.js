@@ -2,6 +2,8 @@ import { getRandomNumber } from '../utils/helper.js';
 import { state } from '../state/state.js';
 import Card from './card.js';
 import { menu } from '../components/menu';
+import { handleSound } from '../utils/handleSound.js';
+import { nextLevelSound } from './audio.js';
 
 export default class GameStructure {
   parent = document.body;
@@ -183,6 +185,7 @@ export default class GameStructure {
     }
     state.level++;
     state.points += state.currentTime;
+    handleSound(nextLevelSound);
     state.clearLevelStats();
     this.startGame();
   }
