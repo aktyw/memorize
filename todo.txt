@@ -9,3 +9,5 @@ accesibility
 
 refactor
 add nanoid
+
+points multipier fix

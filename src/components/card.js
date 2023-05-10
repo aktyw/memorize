@@ -120,8 +120,8 @@ export default class Card {
   }
 
   canCheckCards() {
-    const { openCards: oc } = state;
-    return !(oc.length !== 2 && oc.includes(this.cardObj));
+    const { openCards } = state;
+    return !(openCards.length !== 2 && openCards.includes(this.cardObj));
   }
 
   canRemoveCards() {

@@ -6,6 +6,7 @@ import { handleSound } from '../utils/handleSound.js';
 import { nextLevelSound } from './audio.js';
 import { makeTimeline } from './animations.js';
 import { createElements } from '../utils/createElements.js';
+import { nanoid } from 'nanoid';
 
 export default class GameStructure {
   parent = document.body;
@@ -16,7 +17,7 @@ export default class GameStructure {
   playAgainBtn;
   mainMenuBtn;
   bgFull;
-  tl;
+  timeline;
 
   init() {
     this.#generateUI();
@@ -39,7 +40,7 @@ export default class GameStructure {
     this.bgFull.classList.add('bg-full');
     this.parent.appendChild(this.bgFull);
 
-    this.tl = makeTimeline();
+    this.timeline = makeTimeline();
   }
 
   #handleCards() {
@@ -52,7 +53,7 @@ export default class GameStructure {
     for (let i = 0; i < state.cardAmount / 2; i++) {
       const card = new Card(this.gameContainer);
       const card2 = new Card(this.gameContainer);
-      const id = getRandomNumber(100000, 999999);
+      const id = nanoid();
       card.id = id;
       card2.id = id;
 
@@ -85,7 +86,7 @@ export default class GameStructure {
     this.parent.appendChild(this.ui);
 
     const [statsCnt, points, time, level] = createElements('div', 'span', 'span', 'span');
-    
+
     statsCnt.classList.add('stats');
     points.classList.add('stats__points');
     time.classList.add('stats__time');
@@ -115,6 +116,7 @@ export default class GameStructure {
 
   showLevel() {
     this.levelTitle.classList.add('is-visible');
+
     setTimeout(() => {
       this.levelTitle.classList.remove('is-visible');
       state.isGameStart = true;
@@ -156,10 +158,6 @@ export default class GameStructure {
     });
   }
 
-  playAgain() {
-    this.startGame();
-  }
-
   showSummary() {
     this.renderSummary(state.isGameWon);
   }
@@ -169,10 +167,14 @@ export default class GameStructure {
     this.prepStartGame();
   }
 
+  playAgain() {
+    this.startGame();
+  }
+
   clearLevel() {
     this.resetDOM();
     this.init();
-    this.tl.play();
+    // this.tl.play();
   }
 
   startCountdown = () => {
@@ -183,7 +185,7 @@ export default class GameStructure {
       } else {
         this.checkGameStatus();
       }
-    }, state.second * 2);
+    }, state.SECOND);
   };
 
   checkGameStatus() {
@@ -192,16 +194,25 @@ export default class GameStructure {
     state.isRemovedAllCards() ? this.handleLevelWin() : this.handleGameEnd();
   }
 
+  #handleAddPoints() {
+    state.points = (state.points + state.currentTime) * state.bonusMultiplier;
+  }
+
+  #isLastLevel() {
+    return state.level === state.MAX_LEVEL;
+  }
+
   handleLevelWin() {
-    if (state.level === state.maxLevel) {
-      state.points += state.currentTime;
+    if (this.#isLastLevel()) {
       state.isGameWon = true;
+      this.#handleAddPoints();
       this.handleGameEnd();
       return;
     }
-    state.level++;
-    state.points += state.currentTime;
+
     handleSound(nextLevelSound);
+    this.#handleAddPoints();
+    state.level++;
     state.clearLevelStats();
     this.startGame();
   }

@@ -77,7 +77,7 @@ class Menu {
   }
 
   renderHighScoresBtns() {
-    this.menuBtn = this.render('button', ['btn', 'btn-menu', 'btn-menu'], this.btnContainer, 'main menu');
+    this.menuBtn = this.render('button', ['btn', 'btn-menu', 'btn-menu'], 'main menu');
 
     this.menuBtn.addEventListener('click', this.showMainMenu.bind(this));
   }
