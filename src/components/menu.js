@@ -1,10 +1,10 @@
-import { game } from '../index.js';
+import { game } from '../components/game';
 import { state } from '../state/state.js';
 import { menuSongs, buttonSound } from '../components/audio';
 import { handleSound } from '../utils/handleSound.js';
 import { makeEndTimeline, makeStartTimeline } from './animations.js';
 
-class Menu {
+export default class Menu {
   parent = document.getElementById('game');
   menu;
   btnContainer;
@@ -20,9 +20,6 @@ class Menu {
   menuMusicState = 'play music';
   difficulty = this.difficultyLevel;
 
-  constructor() {
-    this.init();
-  }
 
   init() {
     this.generateMenu();
@@ -171,7 +168,7 @@ class Menu {
       this.menu.remove();
       game.startGame();
       this.pauseMusic();
-      makeEndTimeline()
+      makeEndTimeline();
     }, state.START_ANIMATION_TIME);
   }
 
@@ -212,5 +209,3 @@ class Menu {
     this.scoreBtn.addEventListener('click', this.showHighScores.bind(this));
   }
 }
-
-export const menu = new Menu();

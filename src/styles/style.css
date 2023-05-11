@@ -1,3 +1,21 @@
+@font-face {
+  font-family: 'Oxanium';
+  font-display: swap;
+  font-weight: normal;
+  font-style: normal;
+  src: url('../assets/fonts/Oxanium-Regular.woff2') format('woff2'),
+    url('../assets/fonts/Oxanium-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Oxanium';
+  font-display: swap;
+  font-weight: bold;
+  font-style: normal;
+  src: url('../assets/fonts/Oxanium-Bold.woff2') format('woff2'),
+    url('../assets/fonts/Oxanium-Bold.ttf') format('truetype');
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -9,7 +27,7 @@
 
 body {
   position: relative;
-  font-family: 'Oxanium';
+  font-family: 'Oxanium', 'Poppins', 'sans-serif';
   background-color: #000;
   overflow: hidden;
 }
@@ -46,7 +64,7 @@ body {
   height: 100vh;
   height: 100svh;
   overflow: hidden;
-  background-image: url('../assets/room-4.jpg');
+  background: #000000;
   background-size: cover;
   background-position: center;
 }
@@ -97,7 +115,7 @@ header {
 }
 
 .card-back {
-  background: url('../assets/card.jpg');
+  background: url('../assets/card.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -218,7 +236,7 @@ header {
   place-items: center;
   width: 100%;
   height: 100vh;
-  background: url(../assets/room.jpg);
+  background: url(../assets/room.webp);
   background-position: center;
   background-repeat: no-repeat;
   user-select: none;

@@ -1,13 +1,13 @@
 import { state } from '../state/state.js';
 import Card from './card.js';
-import { menu } from '../components/menu';
+import { menu } from '../index';
 import { handleSound } from '../utils/handleSound.js';
 import { nextLevelSound } from './audio.js';
 import { makeFullTimeline } from './animations.js';
 import { createElements } from '../utils/createElements.js';
 import { nanoid } from 'nanoid';
 
-export default class GameStructure {
+class Game {
   parent = document.getElementById('game');
   gameContainer;
   ui;
@@ -239,3 +239,5 @@ export default class GameStructure {
     }, state.timeToStart);
   }
 }
+
+export const game = new Game();

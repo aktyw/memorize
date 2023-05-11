@@ -1,16 +1,16 @@
 import { opacityTime } from '../utils/helper';
-import room1 from '../assets/room-1.jpg';
-import room2 from '../assets/room-2.jpg';
-import room3 from '../assets/room-3.jpg';
-import room5 from '../assets/room-5.jpg';
-import room6 from '../assets/room-6.jpg';
+import room1 from '../assets/room-1.webp';
+import room2 from '../assets/room-2.webp';
+import room3 from '../assets/room-3.webp';
+import room5 from '../assets/room-5.webp';
+import room6 from '../assets/room-6.webp';
 
 class GameState {
   #points = 0;
   #level = 1;
 
   #config = {
-    MAX_LEVEL: 5,
+    MAX_LEVEL: 2,
     difficulty: {
       easy: true,
       medium: false,

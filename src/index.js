@@ -1,3 +1,6 @@
-import Game from './components/game';
+import Menu from './components/menu';
+export const menu = new Menu();
 
-export const game = new Game();
+window.addEventListener('DOMContentLoaded', () => {
+  menu.init();
+});

@@ -1,5 +1,5 @@
 import { state } from '../state/state.js';
-import { game } from '../index.js';
+import { game } from '../components/game';
 import { flipCardSound, cardSuccessSound } from './audio.js';
 import { handleSound } from '../utils/handleSound.js';
 
@@ -39,7 +39,7 @@ export default class Card {
     try {
       this.image = document.createElement('img');
       this.image.classList.add('card__image');
-      const url = `https://unsplash.it/640/480?${Math.random() * 1000000}`;
+      const url = `https://unsplash.it/480/240?${Math.random() * 1000000}`;
       await this.image.setAttribute('src', url);
 
       this.image.setAttribute('draggable', `false`);
