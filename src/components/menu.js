@@ -2,9 +2,10 @@ import { game } from '../index.js';
 import { state } from '../state/state.js';
 import { menuSongs, buttonSound } from '../components/audio';
 import { handleSound } from '../utils/handleSound.js';
+import { makeEndTimeline, makeStartTimeline } from './animations.js';
 
 class Menu {
-  parent = document.body;
+  parent = document.getElementById('game');
   menu;
   btnContainer;
   startBtn;
@@ -165,9 +166,13 @@ class Menu {
   }
 
   startGame() {
-    this.menu.remove();
-    game.startGame();
-    this.pauseMusic();
+    makeStartTimeline();
+    setTimeout(() => {
+      this.menu.remove();
+      game.startGame();
+      this.pauseMusic();
+      makeEndTimeline()
+    }, state.START_ANIMATION_TIME);
   }
 
   showOptions() {

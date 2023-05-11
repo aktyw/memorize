@@ -2,19 +2,12 @@ import { opacityTime } from '../utils/helper';
 import room1 from '../assets/room-1.jpg';
 import room2 from '../assets/room-2.jpg';
 import room3 from '../assets/room-3.jpg';
-import room4 from '../assets/room-4.jpg';
 import room5 from '../assets/room-5.jpg';
 import room6 from '../assets/room-6.jpg';
 
 class GameState {
   #points = 0;
   #level = 1;
-  // MAX_LEVEL = 5;
-  // difficulty = {
-  //   easy: true,
-  //   medium: false,
-  //   hard: false,
-  // };
 
   #config = {
     MAX_LEVEL: 5,
@@ -29,48 +22,39 @@ class GameState {
       [3, 12, 20, 25, 30],
     ],
     multiplier: {
-      level: [1, 1.5, 2, 2.5, 3],
+      level: [1, 1.25, 1.5, 1.75, 2],
       difficulty: [1, 1.5, 2],
     },
-    cards: [2, 8, 12, 16, 20],
-    background: [room1, room2, room3, room4, room5, room6],
+    // cards: [4, 8, 12, 16, 20],
+    cards: [2, 2, 2, 2, 2],
+    background: [room1, room2, room3, room5, room6],
     timeToFlip: 1000,
-    timeToStart: 1500,
+    timeToStart: 1200,
   };
 
-  // levelOptions = {
-  //   time: [
-  //     [15, 25, 35, 45, 60],
-  //     [6, 15, 25, 30, 40],
-  //     [3, 12, 20, 25, 30],
-  //   ],
-  //   multiplier: {
-  //     level: [1, 1.5, 2, 2.5, 3],
-  //     difficulty: [1, 1.5, 2],
-  //   },
-  //   cards: [2, 8, 12, 16, 20],
-  //   background: [room1, room2, room3, room4, room5, room6],
-  // };
-
-  background = this.#config.background[this.level - 1];
-  currentTime = this.#config.time[this.currentDifficultyIndex][this.#level - 1];
-  cardAmount = this.#config.cards[this.#level - 1];
-  allCards = [];
-  openCards = [];
-  #removedCards = 0;
-  #isGameOver = false;
-  #isGameStart = false;
-  isGameWon = false;
-  // timeToFlip = 1000;
-  // timeToStart = 1500;
-  SECOND = 1000;
-  countdown;
-  timeOpacity = opacityTime / 2;
-  userShouldWait = false;
   #audio = {
     isPlayMusic: false,
     isSoundsActive: true,
   };
+
+  background = this.#config.background[this.level - 1];
+  currentTime = this.#config.time[this.currentDifficultyIndex][this.#level - 1];
+  cardAmount = this.#config.cards[this.#level - 1];
+
+  allCards = [];
+  openCards = [];
+  #removedCards = 0;
+  userShouldWait = false;
+
+  #isGameOver = false;
+  #isGameStart = false;
+  #isGameWon = false;
+
+  countdown;
+  timeOpacity = opacityTime / 2;
+  SECOND = 1000;
+  START_ANIMATION_TIME = 1000;
+  ANIMATION_TIME = this.START_ANIMATION_TIME / 2;
 
   changeDifficulty() {
     const difficultyKeys = Object.keys(this.#config.difficulty);
@@ -103,7 +87,7 @@ class GameState {
   }
 
   set points(points) {
-    this.#points = points;
+    this.#points += Math.floor(points);
   }
 
   get bonusMultiplier() {
@@ -113,6 +97,10 @@ class GameState {
 
   get level() {
     return this.#level;
+  }
+
+  get MAX_LEVEL() {
+    return this.#config.MAX_LEVEL;
   }
 
   set level(state) {
@@ -145,6 +133,14 @@ class GameState {
 
   set isGameStart(value) {
     this.#isGameStart = value;
+  }
+
+  get isGameWon() {
+    return this.#isGameWon;
+  }
+
+  set isGameWon(value) {
+    this.#isGameWon = value;
   }
 
   set removedCards(amount) {

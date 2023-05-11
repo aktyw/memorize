@@ -1,28 +1,24 @@
-import { getRandomNumber } from '../utils/helper.js';
 import { state } from '../state/state.js';
 import Card from './card.js';
 import { menu } from '../components/menu';
 import { handleSound } from '../utils/handleSound.js';
 import { nextLevelSound } from './audio.js';
-import { makeTimeline } from './animations.js';
+import { makeFullTimeline } from './animations.js';
 import { createElements } from '../utils/createElements.js';
 import { nanoid } from 'nanoid';
 
 export default class GameStructure {
-  parent = document.body;
+  parent = document.getElementById('game');
   gameContainer;
   ui;
   levelTitle;
   summary;
   playAgainBtn;
   mainMenuBtn;
-  bgFull;
-  timeline;
 
   init() {
     this.#generateUI();
     this.#generateContainer();
-    this.#renderSlideBG();
     this.#handleCards();
     this.showUI();
     this.renderLevelTitle();
@@ -35,14 +31,6 @@ export default class GameStructure {
     this.parent.appendChild(this.gameContainer);
   }
 
-  #renderSlideBG() {
-    this.bgFull = document.createElement('div');
-    this.bgFull.classList.add('bg-full');
-    this.parent.appendChild(this.bgFull);
-
-    this.timeline = makeTimeline();
-  }
-
   #handleCards() {
     this.#generateCards();
     this.#shuffleCards();
@@ -53,6 +41,7 @@ export default class GameStructure {
     for (let i = 0; i < state.cardAmount / 2; i++) {
       const card = new Card(this.gameContainer);
       const card2 = new Card(this.gameContainer);
+
       const id = nanoid();
       card.id = id;
       card2.id = id;
@@ -129,10 +118,10 @@ export default class GameStructure {
           <div class="summary__info-container">
             <span class="summary__info">${
               gameStatus
-                ? `Congratulations! You have won the game.<br>Gathered <span class="summary__info-color">${
+                ? `Congratulations! <br/> You have completed the game.<br/>Gathered <span class="summary__info-color">${
                     state.points
                   }</span> ${state.points === 1 ? 'point' : 'points'}`
-                : `Game over!.<br>Gathered <span class="summary__info-color">${state.points}</span> ${
+                : `Game over!.<br/>Gathered <span class="summary__info-color">${state.points}</span> ${
                     state.points === 1 ? 'point' : 'points'
                   }`
             }</span>
@@ -167,14 +156,25 @@ export default class GameStructure {
     this.prepStartGame();
   }
 
+  startNextLevel() {
+    makeFullTimeline();
+
+    setTimeout(() => {
+      this.clearLevel();
+      this.prepStartGame();
+    }, state.ANIMATION_TIME);
+  }
+
   playAgain() {
-    this.startGame();
+    makeFullTimeline();
+    setTimeout(() => {
+      this.startGame();
+    }, state.ANIMATION_TIME);
   }
 
   clearLevel() {
     this.resetDOM();
     this.init();
-    // this.tl.play();
   }
 
   startCountdown = () => {
@@ -189,13 +189,18 @@ export default class GameStructure {
   };
 
   checkGameStatus() {
+    state.isRemovedAllCards() ? this.handleLevelWin() : this.handleGameEnd();
+    this.#stopGame();
+  }
+
+  #stopGame() {
     clearInterval(state.countdown);
     state.isGameOver = true;
-    state.isRemovedAllCards() ? this.handleLevelWin() : this.handleGameEnd();
   }
 
   #handleAddPoints() {
-    state.points = (state.points + state.currentTime) * state.bonusMultiplier;
+    state.points = state.currentTime * state.bonusMultiplier;
+    this.showUI();
   }
 
   #isLastLevel() {
@@ -209,12 +214,11 @@ export default class GameStructure {
       this.handleGameEnd();
       return;
     }
-
     handleSound(nextLevelSound);
     this.#handleAddPoints();
     state.level++;
     state.clearLevelStats();
-    this.startGame();
+    this.startNextLevel();
   }
 
   handleGameEnd() {

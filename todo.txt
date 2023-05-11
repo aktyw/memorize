@@ -6,8 +6,3 @@ time red when 0 (blinking last 3 sec ?)
 gsap animations
 
 accesibility
-
-refactor
-add nanoid
-
-points multipier fix

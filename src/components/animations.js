@@ -1,29 +1,67 @@
 import { gsap } from 'gsap';
+gsap.config({
+  nullTargetWarn: false,
+});
 
-export const makeTimeline = () => {
+export const makeStartTimeline = () => {
   const tl = gsap.timeline();
 
-  gsap.config({
-    nullTargetWarn: false,
+  tl.to('.animation-bg', {
+    duration: 0,
+    zIndex: 1000,
+    opacity: 0,
+    yPercent: 100,
+    ease: 'power2.out',
+  }).to('.animation-bg', {
+    duration: 0.5,
+    opacity: '100%',
   });
 
-  tl.from('.bg-full', {
-    duration: 0.45,
-    x: '0%',
+  return tl;
+};
+
+export const makeEndTimeline = () => {
+  const tl = gsap.timeline();
+
+  tl.to('.animation-bg', {
+    duration: 0.5,
+    opacity: 0,
+    ease: 'power4.out',
+  })
+  .to('.animation-bg', {
+    duration: 0,
+    yPercent: -100,
+    zIndex: -1,
+    ease: 'power2.in',
+  });
+
+  return tl;
+};
+
+export const makeFullTimeline = () => {
+  const tl = gsap.timeline();
+
+  tl.to('.animation-bg', {
+    duration: 0,
+    zIndex: 1000,
+    opacity: 0,
+    yPercent: 100,
     ease: 'power2.out',
   })
-    .to('.bg-full', {
-      duration: 0.75,
-      opacity: 100,
-      backgroundColor: '#fff333',
-      ease: 'power2.out',
+    .to('.animation-bg', {
+      duration: 0.5,
+      opacity: '100%',
     })
-    .to('.bg-full', {
+    .to('.animation-bg', {
       duration: 0.5,
       opacity: 0,
-      y: '100%',
-      ease: 'power2.out',
+      ease: 'power4.out',
+    })
+    .to('.animation-bg', {
+      duration: 0,
+      yPercent: -100,
+      zIndex: -1,
+      ease: 'power2.in',
     });
-
   return tl;
 };
