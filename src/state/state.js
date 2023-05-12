@@ -10,7 +10,7 @@ class GameState {
   #level = 1;
 
   #config = {
-    MAX_LEVEL: 2,
+    MAX_LEVEL: 5,
     difficulty: {
       easy: true,
       medium: false,
@@ -25,8 +25,9 @@ class GameState {
       level: [1, 1.25, 1.5, 1.75, 2],
       difficulty: [1, 1.5, 2],
     },
-    // cards: [4, 8, 12, 16, 20],
-    cards: [2, 2, 2, 2, 2],
+    cards: [4, 8, 12, 16, 20],
+    // cards: [2, 2, 2, 2, 2],
+
     background: [room1, room2, room3, room5, room6],
     timeToFlip: 1000,
     timeToStart: 1200,
@@ -97,6 +98,10 @@ class GameState {
 
   get level() {
     return this.#level;
+  }
+
+  get cards() {
+    return this.#config.cards;
   }
 
   get MAX_LEVEL() {

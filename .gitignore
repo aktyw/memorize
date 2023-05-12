@@ -4,6 +4,8 @@ node_modules/
 # Ignore any local configuration files
 .env
 config.js
+config.env
+.env
 
 # Ignore built files
 /dist
