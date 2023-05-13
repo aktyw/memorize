@@ -44,7 +44,6 @@ class GameState {
     isSoundsActive: true,
   };
 
-  #urlCollection = [];
   #imageCollection = [];
   #currentImageCollection = [];
 
@@ -130,20 +129,12 @@ class GameState {
     return this.#imageCollection;
   }
 
-  get urlCollection() {
-    return this.#urlCollection;
-  }
-
   set currentImageCollection(img) {
     this.#currentImageCollection = img;
   }
 
   set imageCollection(img) {
     this.#imageCollection = img;
-  }
-
-  set urlCollection(url) {
-    this.#urlCollection = url;
   }
 
   get audio() {

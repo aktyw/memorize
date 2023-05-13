@@ -63,9 +63,7 @@ class Game {
   }
 
   #shuffle(elements) {
-    console.log(elements);
     const toShuffle = [...elements];
-    console.log(toShuffle);
     for (let i = toShuffle.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [toShuffle[i], toShuffle[j]] = [toShuffle[j], toShuffle[i]];

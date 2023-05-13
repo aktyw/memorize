@@ -9,6 +9,7 @@ export default class Images {
   #url = `https://source.unsplash.com`;
   #amountImagesToFetch;
   #loaded = 0;
+  #attemptsToFetch = 0;
 
   async getCollection() {
     try {
@@ -20,23 +21,38 @@ export default class Images {
         fetchedCollection.push(this.fetchImages(id));
       }
 
-      const urlCollection = await Promise.all(fetchedCollection);
-      const imageCollection = urlCollection.map(this.#createPairs);
+      const urlCollection = await Promise.allSettled(fetchedCollection);
 
-      state.urlCollection = urlCollection;
+      const fulfilledUrlCollection = urlCollection.filter(
+        ({ status, value }) => status === 'fulfilled' && value.includes('photo')
+      );
+      const uniqueCollection = [...new Set(fulfilledUrlCollection.map((item) => item.value))];
+
+      const imageCollection = uniqueCollection.map(this.#createPairs);
+
       state.imageCollection = imageCollection;
     } catch (error) {
       console.log(error);
-      state.collection = this.getFallback();
     }
   }
+
+  async refillImages() {}
 
   async fetchImages(id) {
     const isMobile = window.matchMedia('only screen and (max-width: 768px)').matches;
     try {
-      const res = await fetch(
+      const timeoutLimit = new Promise((_, reject) => {
+        setTimeout(() => {
+          reject(new Error('Request timed out'));
+        }, 4000);
+      });
+
+      const fetchImage = await fetch(
         `${this.#url}/${isMobile ? this.#dimensionsMobile : this.#dimensionsDesktop}/?${this.#theme}-${id}`
       );
+
+      const res = await Promise.race([timeoutLimit, fetchImage]);
+
       this.#loaded++;
       loader.showPercentage(Math.floor((this.#loaded / this.#amountImagesToFetch) * 100));
       return res.url;
