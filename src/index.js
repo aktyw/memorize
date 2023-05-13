@@ -7,7 +7,7 @@ export const handleImages = new Images();
 
 window.addEventListener('DOMContentLoaded', async () => {
   loader.showLoadingAssetsScreen();
-  await handleImages.getCollection();
+   handleImages.getCollection();
   menu.init();
   loader.destroyLoadingScreen();
 });

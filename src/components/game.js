@@ -126,6 +126,15 @@ class Game {
   }
 
   renderSummary(gameStatus) {
+    const isHighScore = state.points > state.highScores.at(-1).score;
+
+    const highScore = `<div class="scores">
+    <h2>You are in TOP 10!</h2>
+    <label for="name">Your name:</label>
+    <input class="input-score" type="text" id="name" name="name" minlength="3" maxlength="14">
+    <button class="btn summary__btn summary_btn-scores">Submit</button>
+  </div>`;
+
     const markup = `
         <div class="summary">
           <div class="summary__info-container">
@@ -139,6 +148,7 @@ class Game {
                   }`
             }</span>
           </div>
+          ${isHighScore ? highScore : ''}
           <div class="summary__btn-container">
             <button class="btn summary__btn summary__btn-again">Play Again</button>
             <button class="btn summary__btn summary__btn-menu">Main Menu</button>

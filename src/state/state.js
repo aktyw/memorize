@@ -18,7 +18,7 @@ class GameState {
     },
 
     time: [
-      [12, 25, 35, 45, 60],
+      [1, 25, 35, 45, 60],
       [6, 15, 25, 30, 40],
       [3, 12, 20, 25, 30],
     ],
@@ -43,6 +43,19 @@ class GameState {
     isPlayMusic: false,
     isSoundsActive: true,
   };
+
+  highScores = [
+    { name: 'Alala', score: 512 },
+    { name: 'cas', score: 521 },
+    { name: 'asc', score: 123 },
+    { name: 'bvcx', score: 356 },
+    { name: 'zxc', score: 421 },
+    { name: 'bxc', score: 124 },
+    { name: 'bxc', score: 124 },
+    { name: 'xcb', score: 12 },
+    { name: 'bfed', score: 142 },
+    { name: 'AlalaAlalaAlal', score: 20 },
+  ];
 
   #imageCollection = [];
   #currentImageCollection = [];

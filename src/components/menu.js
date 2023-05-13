@@ -19,6 +19,7 @@ export default class Menu {
   musicBtn;
   nextSongBtn;
   loader;
+  highScoreContainer;
   currentSongIndex = 0;
   menuSoundsState = 'disable sounds';
   menuMusicState = 'play music';
@@ -113,6 +114,22 @@ export default class Menu {
   }
 
   renderHighScoresBtns() {
+    this.render('h2', ['menu-subtitle'], 'High scores');
+    this.highScoreContainer = this.render('div', ['high-score-container']);
+    console.log(state.highScores);
+    state.highScores.forEach(({ name, score }, pos) => {
+      const markup = `
+        <div class="score-container">
+          <span class="score-pos">${pos + 1}</span>
+          <div class="score-flex">
+            <span>${name}</span>
+            <span>${score}</span>
+          </div>
+        </div>
+      `;
+      this.highScoreContainer.insertAdjacentHTML('beforeend', markup);
+    });
+
     this.menuBtn = this.render('button', ['btn', 'btn-menu', 'btn-menu'], 'main menu');
 
     this.menuBtn.addEventListener('click', this.showMainMenu.bind(this));
