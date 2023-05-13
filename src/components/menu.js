@@ -3,6 +3,7 @@ import { state } from '../state/state.js';
 import { menuSongs, buttonSound } from '../components/audio';
 import { handleSound } from '../utils/handleSound.js';
 import { makeEndTimeline, makeStartTimeline } from './animations.js';
+import { handleImages } from '../index';
 
 export default class Menu {
   parent = document.getElementById('game');
@@ -13,13 +14,15 @@ export default class Menu {
   optionsBtn;
   menuBtn;
   soundsBtn;
+  cardDeckBtn;
+  cardDeckFetchBtn;
   musicBtn;
   nextSongBtn;
+  loader;
   currentSongIndex = 0;
   menuSoundsState = 'disable sounds';
   menuMusicState = 'play music';
   difficulty = this.difficultyLevel;
-
 
   init() {
     this.generateMenu();
@@ -65,13 +68,48 @@ export default class Menu {
     this.musicBtn = this.render('button', [...this.getAudioBtnClass('isPlayMusic'), 'btn-music'], this.menuMusicState);
     this.nextSongBtn = this.render('button', ['btn', 'btn-next-song'], 'Next song');
 
+    this.render('h2', ['menu-subtitle'], 'Card deck');
+    this.cardDeckBtn = this.render('button', ['btn', 'btn-card-deck'], state.currentTheme);
+    this.cardDeckFetchBtn = this.render('button', ['btn', 'btn-card-deck-fetch', 'btn-menu-active'], 'get theme');
+
     this.menuBtn = this.render('button', ['btn', 'btn-menu', 'btn-back'], 'main menu');
 
+    this.cardDeckBtn.addEventListener('click', this.changeCardDeck.bind(this));
+    this.cardDeckFetchBtn.addEventListener('click', this.handleFetchNewCardDeck.bind(this));
     this.soundsBtn.addEventListener('click', this.toggleSounds.bind(this));
     this.difficulty.addEventListener('click', this.handleChangeDifficulty.bind(this));
     this.musicBtn.addEventListener('click', this.toggleMusic.bind(this));
     this.nextSongBtn.addEventListener('click', this.playNextSong.bind(this));
     this.menuBtn.addEventListener('click', this.showMainMenu.bind(this));
+  }
+
+  renderLoader() {
+    this.loader = document.createElement('span');
+    this.loader.classList.add('loader', 'loader-small');
+    this.cardDeckFetchBtn.appendChild(this.loader);
+  }
+
+  destroyLoader() {
+    this.cardDeckFetchBtn.removeChild(this.loader);
+  }
+
+  async handleFetchNewCardDeck() {
+    this.cardDeckFetchBtn.setAttribute('disabled', true);
+    this.renderLoader();
+    await handleImages.getCollection();
+    this.destroyLoader();
+    handleImages.attemptsToFetch = 0;
+    this.cardDeckFetchBtn.removeAttribute('disabled');
+  }
+
+  changeCardDeck() {
+    const currentIndex = state.themes.findIndex((el) => el === state.currentTheme);
+
+    const nextIndex = (currentIndex + 1) % state.themes.length;
+
+    state.currentTheme = state.themes[nextIndex];
+
+    this.cardDeckBtn.textContent = state.currentTheme;
   }
 
   renderHighScoresBtns() {

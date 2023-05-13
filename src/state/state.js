@@ -31,8 +31,8 @@ class GameState {
     // cards: [2, 2, 2, 2, 2],
     // cards: [4, 8],
     cards: [4, 8, 12, 16, 20],
-    currentTheme: 'random',
-    themes: ['city', 'nature', 'cyberpunk', 'cars', 'wildlife', 'food', 'cosmos'],
+    currentTheme: 'cyberpunk',
+    themes: ['animals', 'cyberpunk', 'cars', 'travel', 'food', 'nature', 'random', 'sports'],
     background: [room1, room2, room3, room5, room6],
 
     timeToFlip: 1000,
@@ -111,6 +111,18 @@ class GameState {
 
   get cards() {
     return this.#config.cards;
+  }
+
+  get themes() {
+    return this.#config.themes;
+  }
+
+  get currentTheme() {
+    return this.#config.currentTheme;
+  }
+
+  set currentTheme(theme) {
+    this.#config.currentTheme = theme;
   }
 
   get MAX_LEVEL() {

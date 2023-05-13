@@ -5,7 +5,6 @@ import { loader } from './loading';
 export default class Images {
   #dimensionsDesktop = '960x640';
   #dimensionsMobile = '480x320';
-  #theme = state.theme || 'random';
   #url = `https://source.unsplash.com`;
   #amountImagesToFetch;
   #loaded = 0;
@@ -13,6 +12,11 @@ export default class Images {
 
   async getCollection() {
     try {
+      this.#attemptsToFetch++;
+      if (this.#attemptsToFetch >= 5) {
+        throw new Error('Too many attemps to get random card deck! Check again later or choose standard card deck');
+      }
+
       this.#amountImagesToFetch = state.cards.reduce((a, v) => a + v) / 2;
       const fetchedCollection = [];
 
@@ -31,12 +35,24 @@ export default class Images {
       const imageCollection = uniqueCollection.map(this.#createPairs);
 
       state.imageCollection = imageCollection;
+
+      if (state.imageCollection.length < 30) {
+        this.refillImages();
+      }
+    } catch (error) {
+      console.log(error);
+      this.getFallbackCardDeck();
+    }
+  }
+
+  async refillImages() {
+    try {
+      console.log('again');
+      this.getCollection();
     } catch (error) {
       console.log(error);
     }
   }
-
-  async refillImages() {}
 
   async fetchImages(id) {
     const isMobile = window.matchMedia('only screen and (max-width: 768px)').matches;
@@ -44,13 +60,12 @@ export default class Images {
       const timeoutLimit = new Promise((_, reject) => {
         setTimeout(() => {
           reject(new Error('Request timed out'));
-        }, 4000);
+        }, 6000);
       });
 
       const fetchImage = await fetch(
-        `${this.#url}/${isMobile ? this.#dimensionsMobile : this.#dimensionsDesktop}/?${this.#theme}-${id}`
+        `${this.#url}/random/${isMobile ? this.#dimensionsMobile : this.#dimensionsDesktop}?${state.currentTheme}-${id}`
       );
-
       const res = await Promise.race([timeoutLimit, fetchImage]);
 
       this.#loaded++;
@@ -59,6 +74,10 @@ export default class Images {
     } catch (error) {
       throw new Error('Cannot load an image! Try again or change in-game options', error);
     }
+  }
+
+  set attemptsToFetch(num) {
+    this.#attemptsToFetch = num;
   }
 
   showPercentage() {}
@@ -71,7 +90,7 @@ export default class Images {
     return [img, img2];
   }
 
-  getFallback() {
-    // return locals
+  getFallbackCardDeck() {
+    console.log('Loading local deck cards');
   }
 }

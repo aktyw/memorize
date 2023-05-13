@@ -39,9 +39,7 @@ class Game {
   }
 
   #setupCards() {
-    console.log(state.imageCollection);
     const shuffledCollection = this.#shuffle(state.imageCollection);
-    console.log(shuffledCollection);
     state.currentImageCollection = shuffledCollection;
   }
 

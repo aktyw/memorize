@@ -65,6 +65,17 @@ body {
   z-index: 1000;
 }
 
+.loader-small {
+  position: absolute;
+  top: 10px;
+  right: -35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+}
+
 .loader-title {
   color: white;
 }
@@ -372,6 +383,14 @@ header {
 
 .btn-hidden {
   visibility: hidden;
+}
+
+.btn-card-deck {
+  position: relative;
+}
+
+.btn-card-deck-fetch {
+  position: relative;
 }
 
 .btn-difficulty {
