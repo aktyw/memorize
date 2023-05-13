@@ -32,6 +32,52 @@ body {
   overflow: hidden;
 }
 
+.loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+}
+
+.loading-screen {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  height: 100%;
+  width: 100%;
+  z-index: 10000;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-block;
+  border-top: 3px solid #fff;
+  border-right: 3px solid transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+  z-index: 1000;
+}
+
+.loader-title {
+  color: white;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 /* ==================== */
 /*  GSAP  */
 /* ==================== */
@@ -89,7 +135,7 @@ header {
 .card {
   position: relative;
   width: 200px;
-  height: 280px;
+  height: 300px;
   border-radius: 12px;
   cursor: pointer;
   transition: transform 0.5s;
@@ -115,12 +161,26 @@ header {
 }
 
 .card-back {
-  background: url('../assets/card.webp');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   border: 2px solid rgb(18, 90, 123);
   transition: filter 0.3s;
+}
+
+@media (max-width: 768px) {
+  .card-back {
+    background: url('../assets/card-mobile.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+}
+
+@media (min-width: 769px) {
+  .card-back {
+    background: url('../assets/card.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
 }
 
 .card-back:hover {
@@ -236,12 +296,26 @@ header {
   place-items: center;
   width: 100%;
   height: 100vh;
-  background: url(../assets/room.webp);
-  background-position: center;
-  background-repeat: no-repeat;
   user-select: none;
   overflow: hidden;
-  background-size: cover;
+}
+
+@media (max-width: 768px) {
+  .menu {
+    background: url('../assets/room-mobile.webp');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}
+
+@media (min-width: 769px) {
+  .menu {
+    background: url('../assets/room.webp');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
 }
 
 .menu::before {
@@ -251,9 +325,9 @@ header {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgb(22, 45, 116);
+  background-color: rgb(20, 20, 188);
   z-index: 10;
-  opacity: 0.4;
+  opacity: 0.2;
 }
 
 .menu-title-container {

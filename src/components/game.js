@@ -23,6 +23,7 @@ class Game {
     this.showUI();
     this.renderLevelTitle();
     this.showLevel();
+    this.#handleStartCountdown();
   }
 
   #generateContainer() {
@@ -37,27 +38,43 @@ class Game {
     this.#renderCards();
   }
 
+  #setupCards() {
+    console.log(state.imageCollection);
+    const shuffledCollection = this.#shuffle(state.imageCollection);
+    console.log(shuffledCollection);
+    state.currentImageCollection = shuffledCollection;
+  }
+
   #generateCards() {
     for (let i = 0; i < state.cardAmount / 2; i++) {
-      const card = new Card(this.gameContainer);
-      const card2 = new Card(this.gameContainer);
+      const [img, img2] = state.currentImageCollection.at(-1);
+
+      const card = new Card(this.gameContainer, img);
+      const card2 = new Card(this.gameContainer, img2);
+
+      state.currentImageCollection.pop();
 
       const id = nanoid();
       card.id = id;
       card2.id = id;
 
-      const attr = card.image.getAttribute('src');
-      card2.image.setAttribute('src', attr);
       state.allCards.push(card, card2);
     }
   }
 
-  #shuffleCards() {
-    const cards = state.allCards;
-    for (let i = cards.length - 1; i > 0; i--) {
+  #shuffle(elements) {
+    console.log(elements);
+    const toShuffle = [...elements];
+    console.log(toShuffle);
+    for (let i = toShuffle.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [cards[i], cards[j]] = [cards[j], cards[i]];
+      [toShuffle[i], toShuffle[j]] = [toShuffle[j], toShuffle[i]];
     }
+    return toShuffle;
+  }
+
+  #shuffleCards() {
+    state.allCards = this.#shuffle(state.allCards);
   }
 
   #renderCards() {
@@ -152,29 +169,30 @@ class Game {
   }
 
   startGame() {
-    this.clearLevel();
-    this.prepStartGame();
+    this.#clearLevel();
+    this.#setupCards();
+    this.init();
   }
 
   startNextLevel() {
     makeFullTimeline();
 
     setTimeout(() => {
-      this.clearLevel();
-      this.prepStartGame();
+      this.#clearLevel();
+      this.init();
     }, state.ANIMATION_TIME);
   }
 
   playAgain() {
     makeFullTimeline();
+
     setTimeout(() => {
       this.startGame();
     }, state.ANIMATION_TIME);
   }
 
-  clearLevel() {
+  #clearLevel() {
     this.resetDOM();
-    this.init();
   }
 
   startCountdown = () => {
@@ -233,7 +251,7 @@ class Game {
     this.parent.style.backgroundImage = `url(${state.background})`;
   }
 
-  prepStartGame() {
+  #handleStartCountdown() {
     setTimeout(() => {
       this.startCountdown();
     }, state.timeToStart);

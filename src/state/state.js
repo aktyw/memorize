@@ -16,19 +16,25 @@ class GameState {
       medium: false,
       hard: false,
     },
+
     time: [
-      [15, 25, 35, 45, 60],
+      [12, 25, 35, 45, 60],
       [6, 15, 25, 30, 40],
       [3, 12, 20, 25, 30],
     ],
+
     multiplier: {
       level: [1, 1.25, 1.5, 1.75, 2],
       difficulty: [1, 1.5, 2],
     },
-    cards: [4, 8, 12, 16, 20],
-    // cards: [2, 2, 2, 2, 2],
 
+    // cards: [2, 2, 2, 2, 2],
+    // cards: [4, 8],
+    cards: [4, 8, 12, 16, 20],
+    currentTheme: 'random',
+    themes: ['city', 'nature', 'cyberpunk', 'cars', 'wildlife', 'food', 'cosmos'],
     background: [room1, room2, room3, room5, room6],
+
     timeToFlip: 1000,
     timeToStart: 1200,
   };
@@ -37,6 +43,10 @@ class GameState {
     isPlayMusic: false,
     isSoundsActive: true,
   };
+
+  #urlCollection = [];
+  #imageCollection = [];
+  #currentImageCollection = [];
 
   background = this.#config.background[this.level - 1];
   currentTime = this.#config.time[this.currentDifficultyIndex][this.#level - 1];
@@ -110,6 +120,30 @@ class GameState {
 
   set level(state) {
     this.#level = state;
+  }
+
+  get currentImageCollection() {
+    return this.#currentImageCollection;
+  }
+
+  get imageCollection() {
+    return this.#imageCollection;
+  }
+
+  get urlCollection() {
+    return this.#urlCollection;
+  }
+
+  set currentImageCollection(img) {
+    this.#currentImageCollection = img;
+  }
+
+  set imageCollection(img) {
+    this.#imageCollection = img;
+  }
+
+  set urlCollection(url) {
+    this.#urlCollection = url;
   }
 
   get audio() {

@@ -10,24 +10,22 @@ export default class Card {
   image;
   back;
   canResetState = false;
-  constructor(selector) {
+
+  constructor(selector, image) {
     this.parent = selector;
+    this.image = image;
     this.init();
   }
 
   init() {
-    this.generateCard();
-    this.handleEvents();
+    this.#generateCard();
+    this.#handleEvents();
   }
 
-  async generateCard() {
-    try {
-      this.#renderContainer();
-      await this.#renderImage();
-      this.#renderBack();
-    } catch (error) {
-      console.log(error);
-    }
+  #generateCard() {
+    this.#renderContainer();
+    this.#renderImage();
+    this.#renderBack();
   }
 
   #renderContainer() {
@@ -35,18 +33,11 @@ export default class Card {
     this.card.classList.add('card');
   }
 
-  async #renderImage() {
-    try {
-      this.image = document.createElement('img');
-      this.image.classList.add('card__image');
-      const url = `https://unsplash.it/480/240?${Math.random() * 1000000}`;
-      await this.image.setAttribute('src', url);
-
-      this.image.setAttribute('draggable', `false`);
-      this.card.appendChild(this.image);
-    } catch (error) {
-      throw new Error('Cannot load an image! Try again or change in-game options');
-    }
+  #renderImage() {
+    this.image.className = '';
+    this.image.classList.add('card__image');
+    this.image.setAttribute('draggable', `false`);
+    this.card.appendChild(this.image);
   }
 
   #renderBack() {
@@ -156,7 +147,7 @@ export default class Card {
     this.canResetState = true;
   }
 
-  handleEvents() {
+  #handleEvents() {
     this.card.addEventListener('click', this.#showCard.bind(this));
   }
 }
