@@ -18,7 +18,7 @@ class GameState {
     },
 
     time: [
-      [1, 25, 35, 45, 60],
+      [12, 25, 35, 45, 60],
       [6, 15, 25, 30, 40],
       [3, 12, 20, 25, 30],
     ],
@@ -28,9 +28,9 @@ class GameState {
       difficulty: [1, 1.5, 2],
     },
 
-    // cards: [2, 2, 2, 2, 2],
+    cards: [2, 2, 2, 2, 2],
     // cards: [4, 8],
-    cards: [4, 8, 12, 16, 20],
+    // cards: [4, 8, 12, 16, 20],
     currentTheme: 'cyberpunk',
     themes: ['animals', 'cyberpunk', 'cars', 'travel', 'food', 'nature', 'random', 'sports'],
     background: [room1, room2, room3, room5, room6],
@@ -44,18 +44,7 @@ class GameState {
     isSoundsActive: true,
   };
 
-  highScores = [
-    { name: 'Alala', score: 512 },
-    { name: 'cas', score: 521 },
-    { name: 'asc', score: 123 },
-    { name: 'bvcx', score: 356 },
-    { name: 'zxc', score: 421 },
-    { name: 'bxc', score: 124 },
-    { name: 'bxc', score: 124 },
-    { name: 'xcb', score: 12 },
-    { name: 'bfed', score: 142 },
-    { name: 'AlalaAlalaAlal', score: 20 },
-  ];
+  #highScores = [];
 
   #imageCollection = [];
   #currentImageCollection = [];
@@ -76,6 +65,7 @@ class GameState {
   countdown;
   timeOpacity = opacityTime / 2;
   SECOND = 1000;
+  #MAX_HIGHSCORE = 10;
   START_ANIMATION_TIME = 1000;
   ANIMATION_TIME = this.START_ANIMATION_TIME / 2;
 
@@ -126,6 +116,10 @@ class GameState {
     return this.#config.cards;
   }
 
+  get MAX_HIGHSCORE() {
+    return this.#MAX_HIGHSCORE;
+  }
+
   get themes() {
     return this.#config.themes;
   }
@@ -160,6 +154,14 @@ class GameState {
 
   set imageCollection(img) {
     this.#imageCollection = img;
+  }
+
+  get highScores() {
+    return this.#highScores;
+  }
+
+  set highScores(highScore) {
+    this.#highScores = highScore;
   }
 
   get audio() {
@@ -207,7 +209,6 @@ class GameState {
   }
 
   clearGameStats() {
-    this.saveHighScore();
     this.#level = 1;
     this.#points = 0;
 
@@ -226,8 +227,6 @@ class GameState {
     this.isGameWon = false;
     this.userShouldWait = false;
   }
-
-  saveHighScore() {}
 }
 
 export const state = new GameState();

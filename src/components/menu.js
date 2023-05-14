@@ -29,6 +29,7 @@ export default class Menu {
     this.generateMenu();
     this.renderBtns();
     this.handeSoundEvents();
+    this.updateScoresFromStorage();
   }
 
   render(el = 'div', classlist = [], text, parent = this.btnContainer) {
@@ -116,9 +117,9 @@ export default class Menu {
   renderHighScoresBtns() {
     this.render('h2', ['menu-subtitle'], 'High scores');
     this.highScoreContainer = this.render('div', ['high-score-container']);
-    console.log(state.highScores);
-    state.highScores.forEach(({ name, score }, pos) => {
-      const markup = `
+    if (state.highScores) {
+      state.highScores?.forEach(({ name, score }, pos) => {
+        const markup = `
         <div class="score-container">
           <span class="score-pos">${pos + 1}</span>
           <div class="score-flex">
@@ -127,8 +128,9 @@ export default class Menu {
           </div>
         </div>
       `;
-      this.highScoreContainer.insertAdjacentHTML('beforeend', markup);
-    });
+        this.highScoreContainer.insertAdjacentHTML('beforeend', markup);
+      });
+    }
 
     this.menuBtn = this.render('button', ['btn', 'btn-menu', 'btn-menu'], 'main menu');
 
@@ -220,11 +222,16 @@ export default class Menu {
   startGame() {
     makeStartTimeline();
     setTimeout(() => {
-      this.menu.remove();
+      this.destroyMenu();
       game.startGame();
-      this.pauseMusic();
       makeEndTimeline();
     }, state.START_ANIMATION_TIME);
+  }
+
+  destroyMenu() {
+    this.removeListeners();
+    this.menu.innerHTML = '';
+    this.menu.remove();
   }
 
   showOptions() {
@@ -234,7 +241,14 @@ export default class Menu {
 
   showHighScores() {
     this.clearContainer();
+    this.updateScoresFromStorage();
     this.renderHighScoresBtns();
+  }
+
+  updateScoresFromStorage() {
+    const highScores = window.localStorage.getItem('highScores');
+    if (!highScores) return;
+    state.highScores = JSON.parse(window.localStorage.getItem('highScores'));
   }
 
   showMainMenu() {

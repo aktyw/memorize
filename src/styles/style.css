@@ -232,9 +232,9 @@ header {
   left: 0;
 }
 
-.stats__time,
-.stats__points,
-.stats__level {
+.stats-time,
+.stats-points,
+.stats-level {
   color: rgb(224, 224, 224);
   font-size: 30px;
 }
@@ -255,17 +255,69 @@ header {
   opacity: 1;
 }
 
+.btn-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  gap: 12px;
+}
+
+.btn {
+  font-weight: 400;
+  text-transform: lowercase;
+  font-size: 30px;
+  border-radius: 5px;
+  border: none;
+  width: 230px;
+  height: 40px;
+  background-color: rgb(255, 255, 255);
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-hidden {
+  visibility: hidden;
+}
+
+.btn-card-deck {
+  position: relative;
+}
+
+.btn-card-deck-fetch {
+  position: relative;
+}
+
+.btn-difficulty {
+  padding-bottom: 16px;
+}
+
+.btn-menu {
+  position: relative;
+}
+
+.btn-back {
+  margin-top: 64px;
+}
+
+.btn-menu-active {
+  background-color: rgb(8, 27, 57);
+  color: rgb(202, 70, 209);
+}
+
 .summary {
   position: absolute;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-between;
+  gap: 50px;
   align-items: center;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 450px;
-  height: 300px;
+  min-height: 300px;
   padding: 30px;
   border-radius: 12px;
   background-color: rgba(3, 30, 62, 0.8);
@@ -281,22 +333,33 @@ header {
   z-index: -1;
 }
 
-.summary__info-container {
+.summary-info-container {
   display: flex;
 }
 
-.summary__info {
+.summary-info {
   font-size: 24px;
 }
 
-.summary__info-color {
+.summary-info-color {
   color: rgb(202, 70, 209);
   font-weight: bold;
 }
 
-.summary__btn-container {
+.summary-btn-container {
   display: flex;
-  gap: 20px;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.summary-score-title {
+  font-size: 24px;
+  text-align: center;
+}
+.summary-score {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .high-score-container {
@@ -304,6 +367,33 @@ header {
   width: 100%;
   height: 100%;
   min-height: 400px;
+}
+
+.summary-form {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.summary-form-input {
+  padding: 0 8px;
+  font-size: 20px;
+  border-radius: 5px;
+}
+
+.summary-btn {
+  font-size: 24px;
+  width: 180px;
+  background-color: rgb(239, 239, 239);
+}
+
+.summary-form-submit {
+  width: 100px;
+}
+
+.summary-score-label {
+  font-size: 20px;
+  padding-top: 20px;
 }
 
 .score-container {
@@ -326,7 +416,7 @@ header {
 .score-flex {
   display: flex;
   justify-content: space-between;
-  gap:12px;
+  gap: 12px;
   width: 100%;
 }
 
@@ -390,63 +480,6 @@ header {
   margin-top: 32px;
 }
 
-.btn-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-  gap: 12px;
-}
-
-.btn {
-  font-weight: 400;
-  text-transform: lowercase;
-  font-size: 30px;
-  border-radius: 5px;
-  border: none;
-  width: 230px;
-  height: 40px;
-  background-color: rgb(255, 255, 255);
-  cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.btn-hidden {
-  visibility: hidden;
-}
-
-.btn-card-deck {
-  position: relative;
-}
-
-.btn-card-deck-fetch {
-  position: relative;
-}
-
-.btn-difficulty {
-  padding-bottom: 16px;
-}
-
-.btn-menu {
-  position: relative;
-}
-
-.btn-back {
-  margin-top: 64px;
-}
-
-.btn-menu-active {
-  background-color: rgb(8, 27, 57);
-  color: rgb(202, 70, 209);
-}
-
-.summary__btn {
-  font-size: 24px;
-  width: 180px;
-  background-color: rgb(239, 239, 239);
-}
-
 @media all and (max-width: 1100px) {
   .card {
     width: 150px;
@@ -485,20 +518,25 @@ header {
     width: 100%;
   }
 
-  .stats__time,
-  .stats__points,
-  .stats__level {
+  .stats-time,
+  .stats-points,
+  .stats-level {
     font-size: 24px;
   }
 
   .summary {
-    width: 350px;
-    height: 250px;
+    width: 100%;
+    max-height: 400px;
     padding: 20px;
   }
 
-  .summary__btn {
-    width: 150px;
+  .summary-form-input {
+    width: 220px;
+  }
+
+  .summary-btn {
+    width: 140px;
+    font-size: 20px;
   }
   .ui {
     padding: 10px 0;

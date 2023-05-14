@@ -13,8 +13,13 @@ class Game {
   ui;
   levelTitle;
   summary;
+  submitScore;
+  submitInput;
   playAgainBtn;
   mainMenuBtn;
+  #summaryScore;
+  #points;
+  #isHighScore = false;
 
   init() {
     this.#generateUI();
@@ -90,18 +95,18 @@ class Game {
     const [statsCnt, points, time, level] = createElements('div', 'span', 'span', 'span');
 
     statsCnt.classList.add('stats');
-    points.classList.add('stats__points');
-    time.classList.add('stats__time');
-    level.classList.add('stats__level');
+    points.classList.add('stats-points');
+    time.classList.add('stats-time');
+    level.classList.add('stats-level');
 
     this.ui.appendChild(statsCnt);
     statsCnt.append(points, time, level);
   }
 
   showUI() {
-    const pointsEl = document.querySelector('.stats__points');
-    const timeEl = document.querySelector('.stats__time');
-    const levelEl = document.querySelector('.stats__level');
+    const pointsEl = document.querySelector('.stats-points');
+    const timeEl = document.querySelector('.stats-time');
+    const levelEl = document.querySelector('.stats-level');
 
     pointsEl.textContent = `points: ${state.points}`;
     timeEl.textContent = `time: ${state.currentTime}`;
@@ -125,53 +130,138 @@ class Game {
     }, state.timeToStart);
   }
 
-  renderSummary(gameStatus) {
-    const isHighScore = state.points > state.highScores.at(-1).score;
-
-    const highScore = `<div class="scores">
-    <h2>You are in TOP 10!</h2>
-    <label for="name">Your name:</label>
-    <input class="input-score" type="text" id="name" name="name" minlength="3" maxlength="14">
-    <button class="btn summary__btn summary_btn-scores">Submit</button>
+  getHighScoreTemplate() {
+    return `<div class="summary-score">
+    <span class="summary-score-title"> You're on the high scores!</span>
+    <form class="summary-form">
+    <input placeholder="Enter name" class="summary-form-input" type="text" id="name" name="name" minlength="3" maxlength="14">
+    <button class="btn summary-form-submit summary-btn" type="submit">Submit</button>
+    </form>
   </div>`;
-
-    const markup = `
-        <div class="summary">
-          <div class="summary__info-container">
-            <span class="summary__info">${
-              gameStatus
-                ? `Congratulations! <br/> You have completed the game.<br/>Gathered <span class="summary__info-color">${
-                    state.points
-                  }</span> ${state.points === 1 ? 'point' : 'points'}`
-                : `Game over!.<br/>Gathered <span class="summary__info-color">${state.points}</span> ${
-                    state.points === 1 ? 'point' : 'points'
-                  }`
-            }</span>
-          </div>
-          ${isHighScore ? highScore : ''}
-          <div class="summary__btn-container">
-            <button class="btn summary__btn summary__btn-again">Play Again</button>
-            <button class="btn summary__btn summary__btn-menu">Main Menu</button>
-          </div>
-        </div>
-    `;
-
-    this.parent.insertAdjacentHTML('beforeend', markup);
-
-    this.playAgainBtn = this.parent.querySelector('.summary__btn-again');
-    this.mainMenuBtn = this.parent.querySelector('.summary__btn-menu');
-    this.handleListeners();
   }
 
-  handleListeners() {
+  getSummaryTemplate() {
+    const summary = `
+    <div class="summary">
+      <div class="summary-info-container">
+        <span class="summary-info">${
+          state.isGameWon
+            ? `Congratulations! <br/> You completed the game.<br/>Gathered <span class="summary-info-color">${
+                this.#points
+              }</span> ${this.#points === 1 ? 'point' : 'points'}`
+            : `Time's up! You lost the game<br/>Gathered <span class="summary-info-color">${this.#points}</span> ${
+                this.#points === 1 ? 'point' : 'points'
+              }`
+        }</span>
+      </div>
+      ${this.#isHighScore ? this.getHighScoreTemplate() : ''}
+      <div class="summary-btn-container">
+        <button class="btn summary-btn summary-btn-again">Play Again</button>
+        <button class="btn summary-btn summary-btn-menu">Main Menu</button>
+      </div>
+    </div>
+    `;
+
+    return summary;
+  }
+
+  #showSubmitInfo() {
+    this.#summaryScore.innerHTML = '';
+
+    const template = `<span class="summary-info">Score saved succesfully</span>`;
+
+    this.#summaryScore.insertAdjacentHTML('afterbegin', template);
+  }
+
+  #showSubmitErrorInfo() {
+    this.#summaryScore.innerHTML = '';
+
+    const template = `<span class="summary-info">Something get wrong.</br> We could not save your score.</span>`;
+
+    this.#summaryScore.insertAdjacentHTML('afterbegin', template);
+  }
+
+  #appendSummaryTemplate() {
+    this.parent.insertAdjacentHTML('beforeend', this.getSummaryTemplate());
+    this.#summaryScore = document.querySelector('.summary-score');
+  }
+
+  #checkIfIsHighScore() {
+    const isGreaterThanLastScore = this.#points > (state.highScores?.at(-1)?.score ?? 0);
+    const isRoomForScore = state.highScores?.length < 10;
+    this.#isHighScore = (isGreaterThanLastScore || isRoomForScore) && this.#points > 0;
+  }
+
+  #saveTempPoints() {
+    this.#points = state.points;
+  }
+
+  #handleHighScoresForm() {
+    if (!this.#isHighScore) return;
+
+    this.submitScore = this.parent.querySelector('.summary-form-submit');
+    this.submitInput = this.parent.querySelector('.summary-form-input');
+
+    this.submitScore.addEventListener('click', this.handleSubmitScore.bind(this));
+  }
+
+  #handleNextSummaryAction() {
+    this.playAgainBtn = this.parent.querySelector('.summary-btn-again');
+    this.mainMenuBtn = this.parent.querySelector('.summary-btn-menu');
+
     this.playAgainBtn.addEventListener('click', this.playAgain.bind(this));
-    this.mainMenuBtn.addEventListener('click', () => {
-      menu.init();
-    });
+    this.mainMenuBtn.addEventListener('click', () => menu.init());
+  }
+
+  renderSummary() {
+    this.#updateScoresFromStorage();
+    this.#saveTempPoints();
+    this.#checkIfIsHighScore();
+    this.#appendSummaryTemplate();
+    this.#handleHighScoresForm();
+    this.#handleNextSummaryAction();
+  }
+
+  handleSubmitScore(e) {
+    try {
+      e.preventDefault();
+
+      const value = this.submitInput.value.trim();
+
+      const highScore = {
+        name: value,
+        score: this.#points,
+      };
+
+      this.#sendScores(highScore);
+      this.#saveScoreToStorage();
+      this.#showSubmitInfo();
+    } catch (error) {
+      this.#showSubmitErrorInfo();
+      console.log(error);
+    }
+  }
+
+  #sendScores(score) {
+    state.highScores = [...state.highScores, score].sort((a, b) => b.score - a.score).slice(0, state.MAX_HIGHSCORE);
+  }
+
+  #updateScoresFromStorage() {
+    const highScores = window.localStorage.getItem('highScores');
+    if (!highScores) return;
+    state.highScores = JSON.parse(window.localStorage.getItem('highScores'));
+  }
+
+  #saveScoreToStorage() {
+    try {
+      window.localStorage.setItem('highScores', JSON.stringify(state.highScores));
+    } catch (error) {
+      throw new Error('Could not save to local storage');
+    }
   }
 
   showSummary() {
-    this.renderSummary(state.isGameWon);
+    this.renderSummary();
   }
 
   startGame() {
