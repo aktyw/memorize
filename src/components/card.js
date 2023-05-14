@@ -48,7 +48,7 @@ export default class Card {
 
   #showCard() {
     if (!this.canShowCard()) return;
-    state.userShouldWait = true;
+    state.playerShouldWait = true;
     this.saveCardObj();
     this.addCard();
     this.handleFlipCard();
@@ -57,7 +57,7 @@ export default class Card {
 
   handleFlipCard() {
     this.canResetState = false;
-    state.userShouldWait = false;
+    state.playerShouldWait = false;
     this.card.classList.add('is-flipped');
     handleSound(flipCardSound);
     if (state.openCards.length > 1) {
@@ -67,7 +67,7 @@ export default class Card {
         });
         this.canResetState = true;
         this.#checkCards();
-        state.userShouldWait = false;
+        state.playerShouldWait = false;
       }, state.timeToFlip);
       return;
     }
@@ -84,7 +84,7 @@ export default class Card {
 
   canShowCard() {
     return (
-      !state.userShouldWait &&
+      !state.playerShouldWait &&
       state.openCards.length < 2 &&
       !this.#isSameCard() &&
       !this.card.classList.contains('hidden') &&
@@ -143,7 +143,7 @@ export default class Card {
 
   #clearState() {
     state.openCards.length = 0;
-    state.userShouldWait = false;
+    state.playerShouldWait = false;
     this.canResetState = true;
   }
 

@@ -11,15 +11,19 @@ class Game {
   parent = document.getElementById('game');
   gameContainer;
   ui;
+  pointsEl;
+  timeEl;
   levelTitle;
   summary;
   submitScore;
   submitInput;
   playAgainBtn;
   mainMenuBtn;
+  resignBtn;
   #summaryScore;
   #points;
   #isHighScore = false;
+  timer;
 
   init() {
     this.#generateUI();
@@ -28,7 +32,7 @@ class Game {
     this.showUI();
     this.renderLevelTitle();
     this.showLevel();
-    this.#handleStartCountdown();
+    this.#handleCountdown();
   }
 
   #generateContainer() {
@@ -92,25 +96,35 @@ class Game {
     this.ui.classList.add('ui');
     this.parent.appendChild(this.ui);
 
-    const [statsCnt, points, time, level] = createElements('div', 'span', 'span', 'span');
+    const [statsCnt, points, time, level, resign] = createElements('div', 'span', 'span', 'span', 'button');
 
     statsCnt.classList.add('stats');
     points.classList.add('stats-points');
     time.classList.add('stats-time');
     level.classList.add('stats-level');
+    resign.classList.add('btn', 'btn-resign');
 
     this.ui.appendChild(statsCnt);
-    statsCnt.append(points, time, level);
+    statsCnt.append(points, time, level, resign);
+
+    resign.addEventListener('click', this.resignGame.bind(this));
   }
 
   showUI() {
-    const pointsEl = document.querySelector('.stats-points');
-    const timeEl = document.querySelector('.stats-time');
+    this.pointsEl = document.querySelector('.stats-points');
+    this.timeEl = document.querySelector('.stats-time');
     const levelEl = document.querySelector('.stats-level');
+    this.resignBtn = document.querySelector('.btn-resign');
 
-    pointsEl.textContent = `points: ${state.points}`;
-    timeEl.textContent = `time: ${state.currentTime}`;
+    this.pointsEl.textContent = `points: ${state.points}`;
+    this.timeEl.textContent = `time: ${state.currentTime}`;
     levelEl.textContent = `level: ${state.level}`;
+    this.resignBtn.textContent = 'Resign';
+  }
+
+  updateUI() {
+    this.pointsEl.textContent = `points: ${state.points}`;
+    this.timeEl.textContent = `time: ${state.currentTime}`;
   }
 
   renderLevelTitle() {
@@ -130,6 +144,15 @@ class Game {
     }, state.timeToStart);
   }
 
+  renderSummary() {
+    this.#updateScoresFromStorage();
+    this.#saveTempPoints();
+    this.#checkIfIsHighScore();
+    this.#appendSummaryTemplate();
+    this.#handleHighScoresForm();
+    this.#handleNextSummaryAction();
+  }
+
   getHighScoreTemplate() {
     return `<div class="summary-score">
     <span class="summary-score-title"> You're on the high scores!</span>
@@ -141,7 +164,7 @@ class Game {
   }
 
   getSummaryTemplate() {
-    const summary = `
+    return `
     <div class="summary">
       <div class="summary-info-container">
         <span class="summary-info">${
@@ -161,8 +184,6 @@ class Game {
       </div>
     </div>
     `;
-
-    return summary;
   }
 
   #showSubmitInfo() {
@@ -213,23 +234,12 @@ class Game {
     this.mainMenuBtn.addEventListener('click', () => menu.init());
   }
 
-  renderSummary() {
-    this.#updateScoresFromStorage();
-    this.#saveTempPoints();
-    this.#checkIfIsHighScore();
-    this.#appendSummaryTemplate();
-    this.#handleHighScoresForm();
-    this.#handleNextSummaryAction();
-  }
-
   handleSubmitScore(e) {
     try {
       e.preventDefault();
 
-      const value = this.submitInput.value.trim();
-
       const highScore = {
-        name: value,
+        name: this.submitInput.value.trim(),
         score: this.#points,
       };
 
@@ -265,7 +275,8 @@ class Game {
   }
 
   startGame() {
-    this.#clearLevel();
+    state.resetGameStats();
+    this.resetDOM();
     this.#setupCards();
     this.init();
   }
@@ -274,7 +285,8 @@ class Game {
     makeFullTimeline();
 
     setTimeout(() => {
-      this.#clearLevel();
+      state.resetLevelStats();
+      this.resetDOM();
       this.init();
     }, state.ANIMATION_TIME);
   }
@@ -287,34 +299,51 @@ class Game {
     }, state.ANIMATION_TIME);
   }
 
-  #clearLevel() {
-    this.resetDOM();
-  }
-
-  startCountdown = () => {
-    state.countdown = setInterval(() => {
-      if (state.currentTime > 0 && !state.isRemovedAllCards()) {
+  startTimer() {
+    this.timer = setInterval(() => {
+      if (this.isPlaying()) {
         state.currentTime--;
-        this.showUI();
+        this.updateUI();
       } else {
-        this.checkGameStatus();
+        this.handleGameEnd();
       }
     }, state.SECOND);
-  };
+  }
 
-  checkGameStatus() {
-    state.isRemovedAllCards() ? this.handleLevelWin() : this.handleGameEnd();
+  isPlaying() {
+    return state.currentTime > 0 && !state.isGameOver && state.isGameStart && !state.isRemovedAllCards();
+  }
+
+  handleGameEnd() {
     this.#stopGame();
+    state.isRemovedAllCards() ? this.handleWin() : this.handleLose();
+  }
+
+  handleWin() {
+    this.#isLastLevel() ? this.handleGameWin() : this.handleLevelWin();
+  }
+
+  handleLose() {
+    this.#stopGame();
+    this.showSummary();
   }
 
   #stopGame() {
-    clearInterval(state.countdown);
+    clearInterval(this.timer);
+    this.timer = null;
+
     state.isGameOver = true;
+    state.isGameStart = false;
+  }
+
+  resignGame() {
+    if (!this.isPlaying()) return;
+    this.handleLose();
   }
 
   #handleAddPoints() {
     state.points = state.currentTime * state.bonusMultiplier;
-    this.showUI();
+    this.updateUI();
   }
 
   #isLastLevel() {
@@ -322,22 +351,16 @@ class Game {
   }
 
   handleLevelWin() {
-    if (this.#isLastLevel()) {
-      state.isGameWon = true;
-      this.#handleAddPoints();
-      this.handleGameEnd();
-      return;
-    }
     handleSound(nextLevelSound);
     this.#handleAddPoints();
     state.level++;
-    state.clearLevelStats();
     this.startNextLevel();
   }
 
-  handleGameEnd() {
+  handleGameWin() {
+    state.isGameWon = true;
+    this.#handleAddPoints();
     this.showSummary();
-    state.clearGameStats();
   }
 
   resetDOM() {
@@ -347,9 +370,9 @@ class Game {
     this.parent.style.backgroundImage = `url(${state.background})`;
   }
 
-  #handleStartCountdown() {
+  #handleCountdown() {
     setTimeout(() => {
-      this.startCountdown();
+      this.startTimer();
     }, state.timeToStart);
   }
 }

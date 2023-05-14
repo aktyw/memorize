@@ -18,7 +18,7 @@ class GameState {
     },
 
     time: [
-      [12, 25, 35, 45, 60],
+      [3, 25, 35, 45, 60],
       [6, 15, 25, 30, 40],
       [3, 12, 20, 25, 30],
     ],
@@ -56,13 +56,12 @@ class GameState {
   allCards = [];
   openCards = [];
   #removedCards = 0;
-  userShouldWait = false;
+  playerShouldWait = false;
 
   #isGameOver = false;
   #isGameStart = false;
   #isGameWon = false;
 
-  countdown;
   timeOpacity = opacityTime / 2;
   SECOND = 1000;
   #MAX_HIGHSCORE = 10;
@@ -208,24 +207,26 @@ class GameState {
     return this.allCards.length === this.#removedCards;
   }
 
-  clearGameStats() {
-    this.#level = 1;
-    this.#points = 0;
-
-    this.clearLevelStats();
-  }
-
-  clearLevelStats() {
+  resetLevelStats() {
     this.currentTime = this.#config.time[this.currentDifficultyIndex][this.#level - 1];
     this.cardAmount = this.#config.cards[this.#level - 1];
     this.background = this.#config.background[this.#level - 1];
+
     this.allCards.length = 0;
     this.#removedCards = 0;
     this.openCards.length = 0;
+
     this.#isGameOver = false;
     this.#isGameStart = false;
+    this.playerShouldWait = false;
+  }
+
+  resetGameStats() {
+    this.#level = 1;
+    this.#points = 0;
     this.isGameWon = false;
-    this.userShouldWait = false;
+
+    this.resetLevelStats();
   }
 }
 
