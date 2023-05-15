@@ -111,6 +111,13 @@ body {
 /*  GAME  */
 /* ==================== */
 
+#tsparticles {
+  background-color: rgb(21, 88, 88);
+  height: 66vh;
+  width: 100vw;
+  z-index: 10000;
+}
+
 #game {
   margin: 0 auto;
   display: flex;
@@ -148,26 +155,37 @@ header {
   height: 300px;
   border-radius: 12px;
   cursor: pointer;
-  transition: transform 0.5s;
+
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  -ms-transform-style: preserve-3d;
   transform-style: preserve-3d;
+
   -webkit-box-shadow: 0px 0px 45px 0px rgba(46, 164, 255, 0.3);
   -moz-box-shadow: 0px 0px 45px 0px rgba(46, 164, 255, 0.3);
   box-shadow: 0px 0px 45px 0px rgba(46, 164, 255, 0.3);
+
+  -webkit-transition: -webkit-transform 0.5s;
+  -moz-transition: -moz-transform 0.5s;
+  -ms-transition: -ms-transform 0.5s;
+  transition: transform 0.5s;
 }
 
-.card__image {
+.card-image {
   transform: rotateY(180deg);
   object-fit: cover;
 }
 
-.card__image,
+.card-image,
 .card-back {
   position: absolute;
   width: 100%;
   height: 100%;
-  backface-visibility: hidden;
   user-select: none;
   border-radius: inherit;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .card-back {
@@ -197,6 +215,11 @@ header {
   filter: brightness(150%);
 }
 
+@-moz-document url-prefix() {
+  .card-back:hover {
+    filter: none;
+  }
+}
 .is-flipped {
   transform: rotateY(180deg);
 }
@@ -212,7 +235,7 @@ header {
   pointer-events: none;
 }
 
-.card__image .hidden {
+.card-image .hidden {
   z-index: -1;
 }
 
@@ -337,7 +360,6 @@ header {
   background-color: rgba(4, 16, 58, 0.85);
   color: white;
 }
-
 
 .summary-info-container {
   display: flex;

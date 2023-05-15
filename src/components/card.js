@@ -35,7 +35,7 @@ export default class Card {
 
   #renderImage() {
     this.image.className = '';
-    this.image.classList.add('card__image');
+    this.image.classList.add('card-image');
     this.image.setAttribute('draggable', `false`);
     this.card.appendChild(this.image);
   }

@@ -222,9 +222,6 @@ export default class Menu {
 
   startGame() {
     try {
-      console.log(state.AMOUNT_IMAGES_REQUIRED);
-      console.log(state.imageCollection.length);
-      console.log(this.isNotEnoughImages());
       if (this.isNotEnoughImages()) {
         throw new Error(
           `${state.imageCollection.length} loaded. Need ${state.AMOUNT_IMAGES_REQUIRED} images to start the game. Game will try to fetch images one time. If it fail, check internet connection, restart the game or change card deck in options`
