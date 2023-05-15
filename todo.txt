@@ -1,8 +1,2 @@
-high score(locale storage) and allow to input username
-
-async card images load - and local hosted images, store 20 imgs
-add timer sound when time is running out
-time red when 0 (blinking last 3 sec ?)
-gsap animations
-
-accesibility
+new songs or loop
+fix before summary overlay

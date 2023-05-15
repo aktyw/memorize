@@ -3,7 +3,8 @@ import { state } from '../state/state.js';
 import { menuSongs, buttonSound } from '../components/audio';
 import { handleSound } from '../utils/handleSound.js';
 import { makeEndTimeline, makeStartTimeline } from './animations.js';
-import { handleImages } from '../index';
+import { fetchImages } from '../index';
+import { loader } from './loading';
 
 export default class Menu {
   parent = document.getElementById('game');
@@ -98,9 +99,9 @@ export default class Menu {
   async handleFetchNewCardDeck() {
     this.cardDeckFetchBtn.setAttribute('disabled', true);
     this.renderLoader();
-    await handleImages.getCollection();
+    fetchImages.resetFetchState();
+    await fetchImages.getCollection();
     this.destroyLoader();
-    handleImages.attemptsToFetch = 0;
     this.cardDeckFetchBtn.removeAttribute('disabled');
   }
 
@@ -220,12 +221,48 @@ export default class Menu {
   }
 
   startGame() {
-    makeStartTimeline();
-    setTimeout(() => {
-      this.destroyMenu();
-      game.startGame();
-      makeEndTimeline();
-    }, state.START_ANIMATION_TIME);
+    try {
+      console.log(state.AMOUNT_IMAGES_REQUIRED);
+      console.log(state.imageCollection.length);
+      console.log(this.isNotEnoughImages());
+      if (this.isNotEnoughImages()) {
+        throw new Error(
+          `${state.imageCollection.length} loaded. Need ${state.AMOUNT_IMAGES_REQUIRED} images to start the game. Game will try to fetch images one time. If it fail, check internet connection, restart the game or change card deck in options`
+        );
+      }
+
+      makeStartTimeline();
+      setTimeout(() => {
+        this.destroyMenu();
+        game.startGame();
+        makeEndTimeline();
+      }, state.START_ANIMATION_TIME);
+    } catch (error) {
+      this.handleFallbackFetch(error);
+      console.log(error);
+    }
+  }
+
+  isNotEnoughImages() {
+    return state.imageCollection.length < state.AMOUNT_IMAGES_REQUIRED;
+  }
+
+  async handleFallbackFetch(err) {
+    try {
+      this.showError(err);
+      loader.showLoadingAssetsScreen();
+      await fetchImages.getCollection();
+      loader.destroyLoadingScreen();
+      if (state.AMOUNT_IMAGES_REQUIRED) {
+        this.startGame();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  showError(err) {
+    this.menu.insertAdjacentHTML('afterbegin', err);
   }
 
   destroyMenu() {

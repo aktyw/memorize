@@ -18,9 +18,9 @@ class GameState {
     },
 
     time: [
-      [3, 25, 35, 45, 60],
-      [6, 15, 25, 30, 40],
-      [3, 12, 20, 25, 30],
+      [12, 25, 35, 45, 55],
+      [6, 15, 30, 35, 40],
+      [3, 12, 25, 30, 35],
     ],
 
     multiplier: {
@@ -28,9 +28,7 @@ class GameState {
       difficulty: [1, 1.5, 2],
     },
 
-    cards: [2, 2, 2, 2, 2],
-    // cards: [4, 8],
-    // cards: [4, 8, 12, 16, 20],
+    cards: [4, 8, 12, 16, 20],
     currentTheme: 'cyberpunk',
     themes: ['animals', 'cyberpunk', 'cars', 'travel', 'food', 'nature', 'random', 'sports'],
     background: [room1, room2, room3, room5, room6],
@@ -65,6 +63,7 @@ class GameState {
   timeOpacity = opacityTime / 2;
   SECOND = 1000;
   #MAX_HIGHSCORE = 10;
+  #AMOUNT_IMAGES_REQUIRED = 30;
   START_ANIMATION_TIME = 1000;
   ANIMATION_TIME = this.START_ANIMATION_TIME / 2;
 
@@ -117,6 +116,10 @@ class GameState {
 
   get MAX_HIGHSCORE() {
     return this.#MAX_HIGHSCORE;
+  }
+
+  get AMOUNT_IMAGES_REQUIRED() {
+    return this.#AMOUNT_IMAGES_REQUIRED;
   }
 
   get themes() {

@@ -25,6 +25,10 @@ export default class Loader {
     this.#loaderTitle.textContent = `Loading ${percentage}%`;
   }
 
+  getErrorTemplate(error) {
+    return `<span class="error-info">${error}</span>`;
+  }
+
   destroyLoadingScreen() {
     document.body.removeChild(this.#loadingContainer);
   }

@@ -3,12 +3,11 @@ import Images from './components/images';
 import { loader } from './components/loading';
 
 export const menu = new Menu();
-export const handleImages = new Images();
+export const fetchImages = new Images();
 
 window.addEventListener('DOMContentLoaded', async () => {
   loader.showLoadingAssetsScreen();
-  await handleImages.getCollection();
-  handleImages.getCollection();
-  menu.init();
+  await fetchImages.getCollection();
   loader.destroyLoadingScreen();
+  menu.init();
 });
