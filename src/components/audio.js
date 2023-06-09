@@ -1,6 +1,6 @@
 import { Howl } from 'howler';
 import { state } from '../state/state';
-import { menu } from '../components/menu';
+import Menu from '../components/menu';
 // eslint-disable-next-line node/no-missing-require
 const lofiSong = require('url:../assets/music/lofi.mp3');
 // eslint-disable-next-line node/no-missing-require
@@ -27,7 +27,7 @@ export const menuSongs = songs.map(
       },
       onpause: () => (state.audio.isPlayMusic = false),
       onend: function () {
-        menu.playNextSong();
+        Menu.playNextSong();
       },
       volume: 0.5,
     })
